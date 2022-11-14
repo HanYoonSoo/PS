@@ -1,5 +1,3 @@
-
-
 import java.util.Scanner;
 
 public class Main {
@@ -49,16 +47,16 @@ public class Main {
 							ans = j;
 						}
 					}
-					else if(n%2==1 && (dp[i][j]==n/2||dp[i][j]==n/2+1)) 
-					{
-						if( Math.abs(sum-2*j) < min)
-						{
-							min = Math.abs(sum-2*j);
-							ans = j;
-						}
-					}
+		//			else if(n%2==1 && (dp[i][j]==n/2||dp[i][j]==n/2+1)) 
+			//		{
+				//		if( Math.abs(sum-2*j) < min)
+					//	{
+						//	min = Math.abs(sum-2*j);
+							//ans = j;
+						//}
+					//}
 				}
-			}
+                }
 			System.out.println(Math.min(ans,sum-ans)+" "+Math.max(ans, sum-ans));
 
 
