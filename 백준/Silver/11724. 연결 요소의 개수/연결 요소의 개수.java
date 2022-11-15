@@ -12,16 +12,17 @@ public class Main{
 		
 		vertex = scan.nextInt();
 		edge = scan.nextInt();
+		
 		graph = new int[vertex+1][vertex+1];
+		check = new boolean[vertex+1];
 		
 		for(int i = 1; i <= edge; i++) {
-			int v = scan.nextInt();
-			int e = scan.nextInt();
+			int v1 = scan.nextInt();
+			int v2 = scan.nextInt();
 			
-			graph[v][e] = graph[e][v] = 1;
+			graph[v1][v2] = graph[v2][v1] = 1;
 		}
 		
-		check = new boolean[vertex+1];
 		int result = 0;
 		for(int i = 1; i <= vertex; i++) {
 			if(!check[i]) {
@@ -31,6 +32,7 @@ public class Main{
 		}
 		
 		System.out.println(result);
+		
 	}
 	
 	public static void dfs(int start) {
@@ -41,7 +43,6 @@ public class Main{
 				dfs(i);
 			}
 		}
-
 	}
 
 }
