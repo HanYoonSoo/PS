@@ -1,44 +1,52 @@
-import java.io.*;
-import java.util.*;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
 
 public class Main {
 
-	static int n;
-	static int[][] arr;
+	static int[][] graph;
+	static int vertex;
+	
 	static StringBuilder sb;
-	public static void main(String[] args) throws IOException{
+	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		
-        n = Integer.parseInt(br.readLine());
-		arr = new int[n][n];
 		StringTokenizer st;
-        
-		for(int i=0; i<n; i++) {
-			int vertex = 0;
+
+		vertex = Integer.parseInt(br.readLine());
+
+		graph = new int[vertex][vertex];
+
+		for (int i = 0; i < vertex; i++) {
 			st = new StringTokenizer(br.readLine());
-			for(int j=0; j<n; j++) {
-				arr[i][j] = Integer.parseInt(st.nextToken());
-				vertex += arr[i][j];
+			int count = 0;
+			
+			for (int j = 0; j < vertex; j++) {
+				graph[i][j] = Integer.parseInt(st.nextToken());
+				count += graph[i][j];
 			}
-			if(vertex%2!=0) {
+			if(count % 2 == 1) {
 				System.out.println(-1);
 				return;
 			}
 		}
 		
 		sb = new StringBuilder();
-		getEulerCircuit(0);
+		dfs(0);
 		System.out.println(sb.toString());
 	}
-	
-	static void getEulerCircuit(int cur) {
-		for(int nxt=0; nxt<arr.length; nxt++) {
-			while(arr[cur][nxt] > 0) {
-				arr[cur][nxt]--;
-				arr[nxt][cur]--;
-				getEulerCircuit(nxt);
+
+	public static void dfs(int start) {
+		for (int i = 0; i < graph.length; i++) {
+			while(graph[start][i] > 0) {
+				graph[start][i]--;
+				graph[i][start]--;
+				dfs(i);
 			}
 		}
-		sb.append((cur+1)+" ");
+		
+		sb.append((start + 1) + " ");
 	}
+
 }
