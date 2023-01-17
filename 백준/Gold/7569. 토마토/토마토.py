@@ -21,17 +21,17 @@ dz = [0, 0, 0, 0, 1, -1]
 
 def bfs():
     while q:
-        x, y, z = q.popleft()
+        z, x, y = q.popleft()
 
         for i in range(6):
+            nz = z + dz[i]
             nx = x + dx[i]
             ny = y + dy[i]
-            nz = z + dz[i]
 
-            if nx >= 0 and nx < H and ny >= 0 and ny < N and nz >= 0 and nz < M:
-                if grid[nx][ny][nz] == 0:
-                    q.append([nx, ny, nz])
-                    grid[nx][ny][nz] = grid[x][y][z] + 1
+            if nz >= 0 and nz < H and nx >= 0 and nx < N and ny >= 0 and ny < M:
+                if grid[nz][nx][ny] == 0:
+                    q.append([nz, nx, ny])
+                    grid[nz][nx][ny] = grid[z][x][y] + 1
 
 bfs()
 
