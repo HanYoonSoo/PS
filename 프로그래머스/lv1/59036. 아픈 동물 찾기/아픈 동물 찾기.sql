@@ -1,2 +1,2 @@
 -- 코드를 입력하세요
-SELECT ANIMAL_ID, NAME FROM ANIMAL_INS WHERE INTAKE_CONDITION LIKE 'Sick' ORDER BY ANIMAL_ID
+SELECT animal_id, name from animal_ins where intake_condition = 'Sick';
