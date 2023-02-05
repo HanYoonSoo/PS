@@ -14,18 +14,19 @@ def postorder(preorder, inorder):
 
     root_idx = inorder.index(preorder[0])
     leftIn = inorder[0:root_idx]
-    leftPr = preorder[1:1 + len(leftIn)]
+    leftPr = preorder[1:len(leftIn) + 1]
     postorder(leftPr, leftIn)
 
     rightIn = inorder[root_idx+1:]
-    rightPr = preorder[len(leftPr)+1:]
+    rightPr = preorder[1+len(leftPr):]
     postorder(rightPr, rightIn)
-
     print(preorder[0], end = ' ')
 
 for _ in range(T):
-    node = int(sys.stdin.readline())
+    size = int(sys.stdin.readline())
+
     preorder = list(map(int, sys.stdin.readline().split()))
     inorder = list(map(int, sys.stdin.readline().split()))
+
     postorder(preorder, inorder)
     print()
