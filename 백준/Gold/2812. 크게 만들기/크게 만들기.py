@@ -1,18 +1,16 @@
-import copy
-
 N, K = map(int, input().split())
 
-arr = list(input())
+number = list(input())
 
 stack = []
 
-k = K
+count = K
+
 for i in range(N):
-    while k > 0 and stack and stack[-1] < arr[i]:
+    while count > 0 and stack and stack[-1] < number[i]:
         stack.pop()
-        k -= 1
-    stack.append(arr[i])
+        count -= 1
+    stack.append(number[i])
 
 print(''.join(stack[:N-K]))
-
 
