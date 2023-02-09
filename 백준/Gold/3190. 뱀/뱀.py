@@ -1,61 +1,70 @@
+import sys
 from collections import deque
 
-n = int(input())
-k = int(input())
+input = sys.stdin.readline
 
-graph = [[0] * n for _ in range(n)]
+N = int(input())
+
+graph = [[0] * (N+1) for _ in range(N+1)]
+
+K = int(input())
+
+for _ in range(K):
+    x, y = map(int, input().split())
+    graph[x][y] = 2
+
+L = int(input())
+direction = []
+
+for _ in range(L):
+    count, dir = input().split()
+    count = int(count)
+    direction.append((count, dir))
+
 dx = [0, 1, 0, -1]
 dy = [1, 0, -1, 0]
 
-for i in range(k):
-    a, b = map(int, input().split())
-    graph[a - 1][b - 1] = 2
+dir_idx = 0
 
-l = int(input())
-dirDict = dict()
-queue = deque()
-queue.append((0, 0))
+snake = [1, 1]
+count = 0
+sx, sy = 1, 1
 
-for i in range(l):
-    x, c = input().split()
-    dirDict[int(x)] = c
+tail = deque()
 
-x, y = 0, 0
-graph[x][y] = 1
-cnt = 0
-direction = 0
-
-def turn(alpha):
-    global direction
-    if alpha == 'L':
-        direction = (direction - 1) % 4
-    else:
-        direction = (direction + 1) % 4
-
+tail.append((1, 1))
+graph[1][1] = 1
 
 while True:
-    cnt += 1
-    x += dx[direction]
-    y += dy[direction]
+    count += 1
+    sx += dx[dir_idx]
+    sy += dy[dir_idx]
 
-    if x < 0 or x >= n or y < 0 or y >= n:
+    if sx > N or sy > N or sx < 1 or sy < 1:
         break
 
-    if graph[x][y] == 2:
-        graph[x][y] = 1
-        queue.append((x, y))
-        if cnt in dirDict:
-            turn(dirDict[cnt])
-
-    elif graph[x][y] == 0:
-        graph[x][y] = 1
-        queue.append((x, y))
-        tx, ty = queue.popleft()
+    if graph[sx][sy] == 2:
+        graph[sx][sy] = 1
+        tail.append((sx, sy))
+    elif graph[sx][sy] == 0:
+        graph[sx][sy] = 1
+        tail.append((sx, sy))
+        tx, ty = tail.popleft()
         graph[tx][ty] = 0
-        if cnt in dirDict:
-            turn(dirDict[cnt])
-
     else:
         break
 
-print(cnt)
+    if len(direction) > 0 and count == direction[0][0]:
+        if direction[0][1] == 'L':
+            dir_idx = (dir_idx - 1) % 4
+        elif direction[0][1] == 'D':
+            dir_idx = (dir_idx + 1) % 4
+        direction.pop(0)
+
+print(count)
+
+
+
+
+
+
