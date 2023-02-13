@@ -5,31 +5,44 @@ input = sys.stdin.readline
 
 V, E = map(int, input().split())
 
-graph = [[] for _ in range(V+1)]
-
+edges = []
 for _ in range(E):
-    a, b, w = map(int, input().split())
-    graph[a].append((w, b))
-    graph[b].append((w, a))
+    edges.append(list(map(int, input().split())))
 
-def prim():
-    visited = [False] * (V+1)
-    heap = [[0, 1]]
-    count = 0
+edges.sort(key=lambda x : x[2])
+
+parent = [i for i in range(0, V+1)]
+
+def get_parent(v):
+    if parent[v] == v:
+        return v
+
+    parent[v] = get_parent(parent[v])
+    return parent[v]
+
+def same_parent(a, b):
+    if get_parent(a) == get_parent(b):
+        return True
+    else:
+        return False
+
+def union_parent(a, b):
+    a = get_parent(a)
+    b = get_parent(b)
+
+    if a < b:
+        parent[b] = a
+    else:
+        parent[a] = b
+
+def kruskal():
     result = 0
+    for a, b, dist in edges:
+        if not same_parent(a, b):
+            union_parent(a, b)
+            result += dist
 
-    while heap:
-        if count == V:
-            return result
-
-        w, vertex = heapq.heappop(heap)
-
-        if not visited[vertex]:
-            visited[vertex] = True
-            count += 1
-            result += w
-            for info in graph[vertex]:
-                heapq.heappush(heap, info)
+    return result
 
 
-print(prim())
+print(kruskal())
