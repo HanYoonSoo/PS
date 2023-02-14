@@ -1,0 +1,14 @@
+N = int(input())
+
+arr = []
+for _ in range(N):
+    arr.append(int(input()))
+
+arr.sort(reverse=True)
+
+result = []
+
+for i in range(1, len(arr) + 1):
+    result.append(arr[i-1] * i)
+
+print(max(result))
