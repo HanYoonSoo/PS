@@ -1,19 +1,22 @@
 import sys
 
-N, M = map(int, sys.stdin.readline().split())
+input = sys.stdin.readline
+
+N, M = map(int, input().split())
+
 graph = []
 
 for _ in range(N):
-    graph.append(list(map(int, sys.stdin.readline().split())))
+    graph.append(list(map(int, input().split())))
 
-T = int(sys.stdin.readline())
+T = int(input())
 
 for _ in range(T):
-    i, j, x, y = map(int, sys.stdin.readline().split())
+    x1, y1, x2, y2 = map(int, input().split())
 
     result = 0
-    for a in range(i-1, x):
-        for b in range(j-1, y):
-            result += graph[a][b]
+    for i in range(x1-1, x2):
+        for j in range(y1-1, y2):
+            result += graph[i][j]
 
     print(result)
