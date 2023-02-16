@@ -1,25 +1,22 @@
-import sys
+word = list(input())
 
-str = list(sys.stdin.readline())
+idx = 0
 
-i = 0
-start = 0
+while idx < len(word):
+    if word[idx] == '<':
+        while idx < len(word) and word[idx] != '>':
+            idx += 1
+    elif word[idx].isalnum():
+        start = idx
 
-while i < len(str):
-    if str[i] == '<':
-        while i < len(str) and str[i] != '>':
-            i += 1
-        i+= 1
-    elif str[i].isalnum():
-        start = i
+        while idx < len(word) and word[idx].isalnum():
+            idx += 1
 
-        while i < len(str) and str[i].isalnum():
-            i += 1
-        temp = str[start:i]
-        temp.reverse()
+        temp_word = word[start:idx]
+        temp_word.reverse()
+        word[start:idx] = temp_word
 
-        str[start:i] = temp
     else:
-        i += 1
+        idx += 1
 
-print(''.join(str))
+print(''.join(word))
