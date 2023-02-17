@@ -1,6 +1,5 @@
--- 코드를 입력하세요
-SELECT hour(datetime) as hour, count(animal_id) as count
+select hour(datetime) as hour, count(*)
 from animal_outs
+where hour(datetime) between 9 and 20
 group by hour
-having hour >= 9 and hour <= 19
 order by hour;
