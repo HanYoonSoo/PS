@@ -1,14 +1,14 @@
 N = int(input())
 
-arr = []
+weight = []
+
 for _ in range(N):
-    arr.append(int(input()))
+    weight.append(int(input()))
 
-arr.sort(reverse=True)
+weight.sort(reverse=True)
 
-result = []
+result = 0
+for i in range(len(weight)):
+    result = max(result, weight[i] * (i+1))
 
-for i in range(1, len(arr) + 1):
-    result.append(arr[i-1] * i)
-
-print(max(result))
+print(result)
