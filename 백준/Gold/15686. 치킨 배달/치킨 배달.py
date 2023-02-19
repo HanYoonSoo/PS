@@ -17,21 +17,16 @@ for i in range(N):
             house.append((i, j))
         elif temp[j] == 2:
             store.append((i, j))
-
     graph.append(temp)
 
 result = sys.maxsize
-
-for combs in combinations(store, M):
-    temp = 0
-    for house_x, house_y in house:
-        store_distance = sys.maxsize
-        for store_x, store_y in combs:
-            store_distance = min(abs(house_x - store_x) + abs(house_y-store_y), store_distance)
-        temp += store_distance
-
-    result = min(result, temp)
+for chicken in combinations(store, M):
+    chick_distance = 0
+    for hx, hy in house:
+        temp = sys.maxsize
+        for cx, cy in chicken:
+            temp = min(abs(cx-hx) + abs(cy - hy), temp)
+        chick_distance += temp
+    result = min(result, chick_distance)
 
 print(result)
-
-
