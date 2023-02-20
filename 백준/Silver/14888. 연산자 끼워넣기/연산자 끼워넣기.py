@@ -1,39 +1,35 @@
 import sys
 
-minimum = 1e9
-maximum = -1e9
-N = int(sys.stdin.readline())
+N = int(input())
 
-num=list(map(int,sys.stdin.readline().rstrip().split()))
+number = list(map(int, input().split()))
 
-cal=list(map(int,sys.stdin.readline().rstrip().split()))
+cal = list(map(int, input().split()))
 
-def calculator(cnt,total,plus,minus,multiply,divide):
-  global maximum,minimum,N
-  
-  if cnt == N:
-    maximum = max(total,maximum)
-    minimum = min(total,minimum)
-    return
+minValue = sys.maxsize
+maxValue = -sys.maxsize
+def calculate(idx, total, plus, minus, mul, divide):
+    global minValue
+    global maxValue
+
+    if idx == N:
+        maxValue = max(total, maxValue)
+        minValue = min(total, minValue)
+        return
 
 
-  if plus:
-    calculator(cnt+1,total+num[cnt],plus-1,minus,multiply,divide)
-  if minus:
-    calculator(cnt+1,total-num[cnt],plus,minus-1,multiply,divide)
-  if multiply:
-    calculator(cnt+1,total*num[cnt],plus,minus,multiply-1,divide)
-  if divide:
-    calculator(cnt+1,int(total/num[cnt]),plus,minus,multiply,divide-1)
+    if plus:
+        calculate(idx + 1, total + number[idx], plus - 1, minus, mul, divide)
+    if minus:
+        calculate(idx + 1, total - number[idx], plus, minus - 1, mul, divide)
+    if mul:
+        calculate(idx + 1, total * number[idx], plus , minus, mul - 1, divide)
+    if divide:
+        calculate(idx + 1, int(total / number[idx]), plus, minus, mul, divide - 1)
 
-calculator(1,num[0],cal[0],cal[1],cal[2],cal[3])
-print(maximum)
-print(minimum)
-    
-  
-  
-    
-  
+calculate(1, number[0], cal[0], cal[1], cal[2], cal[3])
+print(maxValue)
+print(minValue)
 
 
 
