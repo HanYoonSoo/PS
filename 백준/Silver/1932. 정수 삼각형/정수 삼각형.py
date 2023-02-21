@@ -1,19 +1,21 @@
 import sys
 
-n = int(sys.stdin.readline())
+input = sys.stdin.readline
 
-c = []
-for i in range(n):
-  c.append(list(map(int,sys.stdin.readline().rstrip().split())))
+N = int(input().rstrip())
 
-for i in range(1,n):
-  for j in range(i+1):
-    if j ==0:
-      c[i][0] += c[i-1][0]
-    if j!=0 and j!=i:
-      c[i][j] += max(c[i-1][j-1],c[i-1][j])
-    if j==i:
-      c[i][j] += c[i-1][j-1]
+dp = [[] for _ in range(N)]
 
-print(max(c[n-1]))
-  
+for i in range(N):
+    dp[i] = list(map(int, input().split()))
+
+for i in range(1, N):
+    for j in range(i+1):
+        if j == 0:
+            dp[i][0] += dp[i-1][0]
+        elif j == i:
+            dp[i][-1] += dp[i-1][-1]
+        else:
+            dp[i][j] += max(dp[i-1][j-1], dp[i-1][j])
+
+print(max(dp[N-1]))
