@@ -7,14 +7,15 @@ N = int(input().rstrip())
 T = []
 P = []
 
-dp = [0] * (N+1)
-
-for i in range(N):
-    a, b = map(int, input().split())
+for _ in range(N):
+    a, b = map(int,input().split())
     T.append(a)
     P.append(b)
 
+dp = [0] * (N+1)
+
 maxValue = 0
+
 for i in range(N-1, -1, -1):
     time = i + T[i]
 
@@ -25,4 +26,3 @@ for i in range(N-1, -1, -1):
         dp[i] = maxValue
 
 print(maxValue)
-
