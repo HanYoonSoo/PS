@@ -1,43 +1,43 @@
-num_gate = int(input())
-num_airplane = int(input())
-docking = list(range(num_gate+1))
+import sys
 
-airplanes = []
-for _ in range(num_airplane):
-    airplanes.append(int(input()))
+input = sys.stdin.readline
 
-def find_root(airplane):
-    stack = [airplane]
-    while True:
-        parking = docking[airplane]
-        if parking == airplane:
-            break
-        else:
-            stack.append(parking)
-            airplane = docking[parking]
+num_gate = int(input().rstrip())
+num_plane = int(input().rstrip())
 
-    while stack:
-        temp = stack.pop()
-        docking[temp] = parking
+planes = []
 
-    return parking
+for _ in range(num_plane):
+    planes.append(int(input().rstrip()))
 
-def union(a, b):
-    a = find_root(a)
-    b = find_root(b)
+parent = [i for i in range(num_gate + 1)]
 
-    docking[a] = b
+def find_parent(parent, p):
+    if parent[p] == p:
+        return p
+
+    parent[p] = find_parent(parent, parent[p])
+
+    return parent[p]
+
+def union(parent, a, b):
+    a = find_parent(parent, a)
+    b = find_parent(parent, b)
+
+    if a < b:
+        parent[b] = a
+    else:
+        parent[a] = b
 
 count = 0
 
-for i in range(num_airplane):
-    airplane = airplanes[i]
-    root = find_root(airplane)
+for i in range(num_plane):
+    root = find_parent(parent, planes[i])
 
     if root == 0:
         break
 
-    union(root, root - 1)
+    union(parent, root, root - 1)
     count += 1
 
 print(count)
