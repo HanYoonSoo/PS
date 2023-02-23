@@ -1,4 +1,4 @@
-select name, count(*) as count
+select name, count(*) COUNT
 from animal_ins
 where name is not null
 group by name
