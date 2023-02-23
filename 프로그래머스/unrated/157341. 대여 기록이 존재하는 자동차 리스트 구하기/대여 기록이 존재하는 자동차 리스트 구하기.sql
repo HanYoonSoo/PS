@@ -1,5 +1,5 @@
-select distinct(crcc.car_id)
-from car_rental_company_rental_history crcr inner join car_rental_company_car crcc
-on crcr.car_id = crcc.car_id
-where crcr.start_date like '2022-10%' and crcc.car_type = '세단'
-order by crcr.car_id desc;
+select distinct(crcrh.car_id)
+from car_rental_company_rental_history crcrh inner join car_rental_company_car crcc on crcrh.car_id = crcc.car_id
+where crcc.car_type = '세단' and crcrh.start_date like '2022-10%'
+group by crcrh.car_id
+order by crcc.car_id desc;
