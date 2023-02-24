@@ -1,32 +1,41 @@
 import sys
 from itertools import combinations
-
 input = sys.stdin.readline
 
-N, M = map(int, input().split())
+def solution(grid, m):
+    n = len(grid)
 
-graph = []
+    house = []
+    store = []
 
-house = []
-store = []
+    for i in range(n):
+        for j in range(n):
+            if grid[i][j] == 1:
+                house.append((i, j))
+            elif grid[i][j] == 2:
+                store.append((i, j))
 
-for i in range(N):
-    temp = list(map(int, input().split()))
-    for j in range(N):
-        if temp[j] == 1:
-            house.append((i, j))
-        elif temp[j] == 2:
-            store.append((i, j))
-    graph.append(temp)
+    result = sys.maxsize
 
-result = sys.maxsize
-for chicken in combinations(store, M):
-    chick_distance = 0
-    for hx, hy in house:
-        temp = sys.maxsize
-        for cx, cy in chicken:
-            temp = min(abs(cx-hx) + abs(cy - hy), temp)
-        chick_distance += temp
-    result = min(result, chick_distance)
+    for chicken in combinations(store, m):
+        chicken_distance = 0
 
-print(result)
+        for house_x, house_y in house:
+            temp = sys.maxsize
+            for chicken_x, chicken_y in chicken:
+                temp = min(temp, abs(house_x - chicken_x) + abs(house_y - chicken_y))
+            chicken_distance += temp
+
+        result = min(result, chicken_distance)
+
+    return result
+
+n, m = map(int, input().split())
+
+grid = []
+
+for _ in range(n):
+    grid.append(list(map(int, input().split())))
+
+print(solution(grid, m))
+
