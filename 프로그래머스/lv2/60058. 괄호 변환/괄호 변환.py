@@ -6,43 +6,42 @@ def balanced_index(p):
             count += 1
         else:
             count -= 1
+        
         if count == 0:
             return i
-def check_balanced(p):
+def check(u):
     count = 0
-    
-    for i in range(len(p)):
-        if p[i] == '(':
+    for i in range(len(u)):
+        if u[i] == '(':
             count += 1
         else:
             if count == 0:
                 return False
             count -= 1
-        
-        return True
     
+    return True
+
 def solution(p):
     if p == '':
-        return ''
+        return p
     
-    idx = balanced_index(p)
-    u = p[:idx+1]
-    v = p[idx+1:]
+    index = balanced_index(p)
+    u = p[:index+1]
+    v = p[index+1:]
     
-    if check_balanced(u):
-        result = u + solution(v)
-        return result
-    else:
-        temp = '('
-        temp += solution(v)
-        temp += ')'
-        u = u[1:-1]
-        for i in range(len(u)):
-            if u[i] == '(':
-                temp += ')'
-            else:
-                temp += '('
-        
-        return temp
-        
-    return result
+    if check(u):
+        return u + solution(v)
+    
+    temp = '('
+    temp += solution(v)
+    temp += ')'
+    u = list(u[1:-1])
+    
+    for i in range(len(u)):
+        if u[i] == '(':
+            u[i] = ')'
+        else:
+            u[i] = '('
+    
+    return temp + ''.join(u)
+    

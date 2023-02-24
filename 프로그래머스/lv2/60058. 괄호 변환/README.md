@@ -1,10 +1,10 @@
 # [level 2] 괄호 변환 - 60058 
 
-[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/60058?language=python3) 
+[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/60058) 
 
 ### 성능 요약
 
-메모리: 10 MB, 시간: 0.16 ms
+메모리: 10.2 MB, 시간: 0.14 ms
 
 ### 구분
 
