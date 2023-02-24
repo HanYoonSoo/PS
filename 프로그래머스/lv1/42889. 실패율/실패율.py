@@ -1,28 +1,31 @@
 def solution(N, stages):
-    stage_human = [0] * (N+1)
+    stages_count = [0] * (N+1)
     
-    for stage in stages:
-        if stage == N + 1:
+    for num in stages:
+        if num == N + 1:
             continue
-        stage_human[stage] += 1
+        stages_count[num] += 1
     
-    temp = [(1, stage_human[1] / len(stages))]
+    temp = []
+    length = len(stages)
     
-    length = len(stages) - stage_human[1]
-    
-    for i in range(2, N + 1):
-        if stage_human[i] == 0:
-            temp.append((i, 0))
+    for i in range(1, N+1):
+        if stages_count[i] == 0:
+            temp.append((0, i))
         else:
-            temp.append((i, stage_human[i] / length))
-        length -= stage_human[i]
+            temp.append((stages_count[i] / length, i))
+        
+        length -= stages_count[i]
     
-    temp.sort(key = lambda x : (-x[1], x[0]))
+    temp.sort(key = lambda x : (-x[0], x[1]))
     
     result = []
+    
     for i in range(len(temp)):
-        result.append(temp[i][0])
+        result.append(temp[i][1])
     
     return result
+    
+    
     
     
