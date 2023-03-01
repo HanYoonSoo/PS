@@ -1,66 +1,65 @@
 import sys
-import copy
 from itertools import combinations
+import copy
 
 input = sys.stdin.readline
 
-n,m,d = map(int, input().split())
+N, M, D = map(int, input().split())
 
 graph = []
+number = list(range(0, M))
 
-for i in range(n):
+for _ in range(N):
     graph.append(list(map(int, input().split())))
 
-number = list(range(0, m))
-
-def isEmpty(temp):
-    for i in range(n):
-        if 1 in temp[i]:
+def isEmpty(temp_graph):
+    for i in range(N):
+        if 1 in temp_graph[i]:
             return False
+
     return True
 
-def attack(arrow, temp):
-
+def attack(archer, temp_graph):
     attack_enemy = []
     count = 0
-    for l in arrow:
+
+    for a in archer:
         possible = []
-        for i in range(n):
-            for j in range(m):
-                if temp[i][j] == 1:
-                    distance = abs(i-n) + abs(j-l)
 
-                    if d >= distance:
-                        possible.append((distance, i, j))
+        for i in range(N):
+            for j in range(M):
+                if temp_graph[i][j] == 1:
+                    distance = abs(N-i) + abs(a - j)
+                    if distance <= D:
+                        possible.append((i, j, distance))
 
-        possible.sort(key = lambda x: (x[0], x[2]))
-
+        possible.sort(key=lambda x: (x[2], x[1]))
         if possible:
             attack_enemy.append(possible[0])
 
-    for _, i, j in attack_enemy:
-        if temp[i][j] == 1:
-            temp[i][j] = 0
+    for x, y, distance in attack_enemy:
+        if temp_graph[x][y] == 1:
+            temp_graph[x][y] = 0
             count += 1
 
     return count
 
-def move(temp):
-    for i in range(n-1, 0, -1):
-        temp[i] = temp[i-1]
-
-    temp[0] = [0] * m
+def move(temp_graph):
+    for i in range(N-1, 0, -1):
+        temp_graph[i] = temp_graph[i-1]
+    temp_graph[0] = [0] * M
 
 result = 0
-for arrow in combinations(number, 3):
-    temp = copy.deepcopy(graph)
+
+for archer in combinations(number, 3):
+    temp_graph = copy.deepcopy(graph)
 
     count = 0
 
-    while not isEmpty(temp):
-        count += attack(arrow, temp)
+    while not isEmpty(temp_graph):
+        count += attack(archer, temp_graph)
 
-        move(temp)
+        move(temp_graph)
 
     result = max(result, count)
 
