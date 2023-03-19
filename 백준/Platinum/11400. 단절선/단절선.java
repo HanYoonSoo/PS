@@ -5,107 +5,104 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.StringTokenizer;
 
-class Node {
-    int x;
-    int y;
-
-    Node(int x, int y) {
-        this.x = x;
-        this.y = y;
-    }
-}
 
 public class Main {
     static int count = 1;
-    static int[] order;
-    static ArrayList<Node> ans;
 
+    static int V, E;
+
+    static List<ArrayList<Integer>> graph;
+    static int[] order;
+
+    static List<Edge> result;
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-        StringTokenizer st = new StringTokenizer(br.readLine());
 
-        int V = Integer.valueOf(st.nextToken()); // 정점의 개수
-        int E = Integer.valueOf(st.nextToken()); // 간선의 개수
+        String[] temp = br.readLine().split(" ");
 
-        ArrayList<ArrayList<Integer>> a = new ArrayList<>();
-        for (int i = 0; i <= V; i++) {
-            a.add(new ArrayList<>());
-        }
-
-        // 양방향 인접 리스트 구현.
-        for (int i = 0; i < E; i++) {
-            st = new StringTokenizer(br.readLine());
-
-            int A = Integer.parseInt(st.nextToken());
-            int B = Integer.parseInt(st.nextToken());
-
-            a.get(A).add(B);
-            a.get(B).add(A);
-        }
+        V = Integer.parseInt(temp[0]);
+        E = Integer.parseInt(temp[1]);
 
         order = new int[V + 1];
-        ans = new ArrayList<>();
+        graph = new ArrayList<>();
+        result = new ArrayList<>();
 
-        for (int i = 1; i <= V; i++) {
-            if (order[i] == 0) {
-                dfs(i, 0, a);
+        for(int i = 0; i <= V; i++){
+            graph.add(new ArrayList<>());
+        }
+
+        for(int i = 0; i < E; i++){
+            temp = br.readLine().split(" ");
+
+            int a = Integer.parseInt(temp[0]);
+            int b = Integer.parseInt(temp[1]);
+
+            graph.get(a).add(b);
+            graph.get(b).add(a);
+        }
+
+        for(int i = 1; i <= V; i++){
+            if(order[i] == 0){
+                dfs(i, 0);
             }
         }
 
-        // 단절선 목록을 x를 기준으로 오름차순 정렬하되,
-        // x 값이 같다면 y 값을 기준으로 오름차순 정렬한다.
-        Collections.sort(ans, (a1, a2) -> (a1.x == a2.x) ? a1.y - a2.y : a1.x - a2.x);
+        Collections.sort(result, (v1, v2) -> (v1.a == v2.a) ? v1.b - v2.b : v1.a - v2.a);
 
         StringBuilder sb = new StringBuilder();
-        sb.append(ans.size() + "\n"); // 단절선의 개수
 
-        for (int i = 0; i < ans.size(); i++) {
-            sb.append(ans.get(i).x + " " + ans.get(i).y + "\n"); // 단절선의 목록
+        sb.append(result.size() + "\n");
+
+        for(Edge edge : result){
+            sb.append(edge.a + " " + edge.b+"\n");
         }
 
         bw.write(sb.toString());
         bw.flush();
-        bw.close();
-        br.close();
+
     }
 
-    public static int dfs(int vertax, int parent, ArrayList<ArrayList<Integer>> a) {
-        order[vertax] = count++;
-        int ret = order[vertax];
+    public static int dfs(int vertex, int parent) {
+        order[vertex] = count++;
+        int compare = order[vertex];
 
-        // 자식 검사
-        for (int now : a.get(vertax)) {
-            // 내가 온 길은 제외한다.
-            if (now == parent) {
+        for(int next : graph.get(vertex)){
+            if(next == parent)
                 continue;
-            }
 
-            if (order[now] == 0) { // 자식 정점이 방문되지 않았을 경우
-                // 자식 정점 중 방문 순서가 가장 빠른 값.
-                // 이때, 특정 자식 정점이 여러 개의 정점을 타고 타고 올라가서 1번 정점까지
-                // 갈 수도 있다는 점에 유의해야 함.
-                int low = dfs(now, vertax, a);
+            if(order[next] == 0){
+                int minValue = dfs(next, vertex);
 
-                // 가장 작은 방문 순서가 vertax의 방문 순서보다 크거나 같을 경우
-                // 해당 edge는 단절선임.
-                // 다만 시작점은 더 작은 값이 오게 하기 위하여
-                // now와 vertax중 더 작은 값을 시작점으로 설정함.
-                if (low > order[vertax]) {
-                    if (now > vertax) {
-                        ans.add(new Node(vertax, now));
-                    } else {
-                        ans.add(new Node(now, vertax));
+                if(minValue > order[vertex]){
+                    if(next > vertex){
+                        result.add(new Edge(vertex, next));
+                    }
+                    else{
+                        result.add(new Edge(next, vertex));
                     }
                 }
-                ret = Math.min(ret, low);
-            } else { // 자식 정점이 방문되었을 경우
-                ret = Math.min(ret, order[now]);
+                compare = Math.min(minValue, compare);
+            }
+            else{
+                compare = Math.min(compare, order[next]);
             }
         }
 
-        return ret;
+        return compare;
+    }
+
+}
+
+class Edge{
+    int a;
+    int b;
+
+    public Edge(int a, int b){
+        this.a = a;
+        this.b = b;
     }
 }
