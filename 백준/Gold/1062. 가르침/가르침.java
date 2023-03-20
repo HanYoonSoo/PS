@@ -1,67 +1,80 @@
-import java.util.*;
- 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Scanner;
+
 public class Main {
- 
-    static int n, k;
-    static int max = Integer.MIN_VALUE;
+    static int N, K;
+    static String[] words;
     static boolean[] visited;
-    static String[] word;
-    
-    public static void main(String[] args) {
-        Scanner scan = new Scanner(System.in);
- 
-        n = scan.nextInt();
-        k = scan.nextInt();
+
+    static int maxValue = Integer.MIN_VALUE;
+
+    public static void  main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+        String[] temp = br.readLine().split(" ");
         
-        scan.nextLine();
-        word = new String[n];
-        for(int i = 0; i < n; i++) {
-            String str = scan.nextLine();
+        N = Integer.parseInt(temp[0]);
+        K = Integer.parseInt(temp[1]);
+
+        words = new String[N];
+
+        for(int i = 0; i < N; i++){
+            String str = br.readLine();
             str = str.replace("anta", "");
             str = str.replace("tica", "");
-            word[i] = str;
+
+            words[i] = str;
         }
-        
-        if(k < 5) { //a c i n t의 개수가 5개이므로
+
+        if(K < 5){
             System.out.println("0");
             return;
-        } else if(k == 26) { //모든 알파벳을 다 읽을 수 있다.
-            System.out.println(n);
+        }
+        else if(K == 26){
+            System.out.println(N);
             return;
         }
-        
-        visited = new boolean[26]; //각 알파벳을 배웠는지 체크
+
+        visited = new boolean[26];
         visited['a' - 'a'] = true;
-        visited['c' - 'a'] = true;
-        visited['i' - 'a'] = true;
         visited['n' - 'a'] = true;
         visited['t' - 'a'] = true;
-        
-        backtracking(0, 0);
-        System.out.println(max);
+        visited['i' - 'a'] = true;
+        visited['c' - 'a'] = true;
+
+        bactracking(0, 0);
+
+        System.out.println(maxValue);
     }
-    
-    public static void backtracking(int alpha, int len) {
-        if(len == k - 5) {
+
+    public static void bactracking(int idx, int depth){
+        if(depth == K - 5){
             int count = 0;
-            for(int i = 0; i < n; i++) { //뽑은 알파벳으로 몇개의 단어를 읽을 수 있는지 카운트.
+
+            for(int i = 0; i < N; i++){
                 boolean read = true;
-                for(int j = 0; j < word[i].length(); j++) {
-                    if(!visited[word[i].charAt(j) - 'a']) {
+                for(int j = 0; j < words[i].length(); j++){
+                    if(!visited[words[i].charAt(j) - 'a']){
                         read = false;
                         break;
                     }
                 }
-                if(read) count++;
+                if(read){
+                    count++;
+                }
             }
-            max = Math.max(max, count);
+
+            maxValue = Math.max(maxValue, count);
+
             return;
         }
-        
-        for(int i = alpha; i < 26; i++) {
-            if(visited[i] == false) {
+
+        for(int i = idx; i < 26; i++){
+            if(!visited[i]){
                 visited[i] = true;
-                backtracking(i, len + 1);
+                bactracking(i + 1, depth + 1);
                 visited[i] = false;
             }
         }
