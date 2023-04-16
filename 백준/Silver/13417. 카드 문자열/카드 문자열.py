@@ -1,21 +1,21 @@
 import sys
 
-read = lambda: sys.stdin.readline().rstrip()
+input = sys.stdin.readline
 
-T = int(read())
+T = int(input().rstrip())
 
 for _ in range(T):
-    N = int(read())
-    A = list(map(str, read().split()))
+    N = int(input().rstrip())
+    A = list(map(str, input().split()))
 
-    answer = [A[0]]
+    result = [A[0]]
 
     for i in range(1, len(A)):
-        left = answer[0]
+        left = result[0]
 
         if A[i] <= left:
-            answer.insert(0, A[i])
+            result.insert(0, A[i])
         else:
-            answer.append(A[i])
+            result.append(A[i])
 
-    print(''.join(answer))
+    print(''.join(result))
