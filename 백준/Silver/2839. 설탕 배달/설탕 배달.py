@@ -1,17 +1,19 @@
-a = int(input())
+import sys
 
-cnt = 1
-Y = a//5
+input = sys.stdin.readline
 
-while True:
-  compare = a-Y*5
-  if compare%3 == 0:
-    print(Y+compare//3)
-    break
-  else:
-    if Y > 0:
-      Y -=1
-    cnt +=1
-    if 3*cnt > a:
-      print(-1)
-      break
+N = int(input().rstrip())
+
+minNum = 5000
+
+for i in range(N//5 + 1):
+    count = 5000
+    if (N - 5 * i) % 3 == 0:
+        count = i + (N - 5 * i) // 3
+
+    minNum = min(count, minNum)
+
+if minNum == 5000:
+    print(-1)
+else:
+    print(minNum)
