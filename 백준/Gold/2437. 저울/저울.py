@@ -1,10 +1,19 @@
-N = int(input())
-arr = list(map(int, input().split()))
-arr.sort()
+import sys
 
-result = 1
-for i in arr:
-    if result < i:
+input = sys.stdin.readline
+
+N = int(input().rstrip())
+coin = list(map(int, input().split()))
+
+coin.sort()
+
+total = 1
+
+for i in range(len(coin)):
+    if total < coin[i]:
         break
-    result += i
-print(result)
+    else:
+        total += coin[i]
+        
+print(total)
+
