@@ -3,68 +3,57 @@ from collections import deque
 
 input = sys.stdin.readline
 
-N = int(input())
+N = int(input().rstrip())
+K = int(input().rstrip())
 
-graph = [[0] * (N+1) for _ in range(N+1)]
+grid = [[0] * (N+1) for _ in range(N+1)]
 
-K = int(input())
-
-for _ in range(K):
+for i in range(K):
     x, y = map(int, input().split())
-    graph[x][y] = 2
 
-L = int(input())
-direction = []
+    grid[x][y] = 2
 
-for _ in range(L):
+L = int(input().rstrip())
+
+turn = []
+for i in range(L):
     count, dir = input().split()
-    count = int(count)
-    direction.append((count, dir))
+    turn.append((int(count), dir))
 
-dx = [0, 1, 0, -1]
-dy = [1, 0, -1, 0]
+idx = 0
+time = 0
+dx = [-1, 0, 1, 0]
+dy = [0, 1, 0, -1]
 
-dir_idx = 0
-
-snake = [1, 1]
-count = 0
-sx, sy = 1, 1
-
+dir = 1
 tail = deque()
-
 tail.append((1, 1))
-graph[1][1] = 1
+
+x, y = 1, 1
 
 while True:
-    count += 1
-    sx += dx[dir_idx]
-    sy += dy[dir_idx]
+    time += 1
 
-    if sx > N or sy > N or sx < 1 or sy < 1:
-        break
+    nx = x + dx[dir]
+    ny = y + dy[dir]
 
-    if graph[sx][sy] == 2:
-        graph[sx][sy] = 1
-        tail.append((sx, sy))
-    elif graph[sx][sy] == 0:
-        graph[sx][sy] = 1
-        tail.append((sx, sy))
-        tx, ty = tail.popleft()
-        graph[tx][ty] = 0
+    if 1 <= nx <= N and 1 <= ny <= N and ((nx, ny)) not in tail:
+        if grid[nx][ny] == 2:
+            tail.append((nx, ny))
+            grid[nx][ny] = 0
+        elif grid[nx][ny] == 0:
+            tail.popleft()
+            tail.append((nx, ny))
     else:
+        print(time)
         break
 
-    if len(direction) > 0 and count == direction[0][0]:
-        if direction[0][1] == 'L':
-            dir_idx = (dir_idx - 1) % 4
-        elif direction[0][1] == 'D':
-            dir_idx = (dir_idx + 1) % 4
-        direction.pop(0)
+    x = nx
+    y = ny
 
-print(count)
-
-
-
-
-
-
+    if idx < len(turn) and time == turn[idx][0]:
+        if turn[idx][1] == 'D':
+            dir = (dir + 1) % 4
+        else:
+            dir = (dir + 3) % 4
+        idx += 1
