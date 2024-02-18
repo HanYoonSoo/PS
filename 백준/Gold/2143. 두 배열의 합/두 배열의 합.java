@@ -1,93 +1,95 @@
-import java.io.*;
-import java.util.*;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class Main {
-
+	
+	static List<Integer> listA;
+	static List<Integer> listB;
 	static int T;
-	static int n, m;
-	static int[] A, B;
-	static List<Integer> listA = new ArrayList<>();
-	static List<Integer> listB = new ArrayList<>();
-
-	public static void main(String[] args) throws Exception {
-
+	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-
+		
 		T = Integer.parseInt(br.readLine());
-
-		n = Integer.parseInt(br.readLine());
-		A = new int[n];
-		String[] sarr = br.readLine().split(" ");
-		for (int i = 0; i < n; i++)
-			A[i] = Integer.parseInt(sarr[i]);
-
-		m = Integer.parseInt(br.readLine());
-		B = new int[m];
-		sarr = br.readLine().split(" ");
-		for (int i = 0; i < m; i++)
-			B[i] = Integer.parseInt(sarr[i]);
-
-		for (int i = 0; i < n; i++) {
+		
+		int numA = Integer.parseInt(br.readLine());
+		int[] A = new int[numA];
+		String[] arrA = br.readLine().split(" ");
+		for(int i = 0; i < numA; i++) {
+			A[i] = Integer.parseInt(arrA[i]);
+		}
+		
+		int numB = Integer.parseInt(br.readLine());
+		int[] B = new int[numB];
+		String[] arrB = br.readLine().split(" ");
+		for(int i = 0; i < numB; i++) {
+			B[i] = Integer.parseInt(arrB[i]);
+		}
+		
+		listA = new ArrayList<>();
+		listB = new ArrayList<>();
+		
+		for(int i = 0; i < numA; i++) {
 			int sum = 0;
-			for (int j = i; j < n; j++) {
+			for(int j = i; j < numA; j++) {
 				sum += A[j];
 				listA.add(sum);
 			}
 		}
-		for (int i = 0; i < m; i++) {
+		
+		for(int i = 0; i < numB; i++) {
 			int sum = 0;
-			for (int j = i; j < m; j++) {
+			for(int j = i; j < numB; j++) {
 				sum += B[j];
 				listB.add(sum);
 			}
 		}
-
+		
 		Collections.sort(listA);
 		Collections.sort(listB);
-
-		bw.write(getCount() + "\n");
-		bw.flush();
-
+		
+		System.out.println(compute());
 	}
-
-	public static long getCount() {
-
+	
+	public static long compute() {
 		int pa = 0;
 		int pb = listB.size() - 1;
-		long cnt = 0;
-
-		while (pa < listA.size() && pb >= 0) {
-
+		long count = 0;
+		
+		while(pa < listA.size() && pb >= 0) {
 			long sum = listA.get(pa) + listB.get(pb);
-
-			if (sum == T) {
-
+			
+			if(sum == T) {
 				int a = listA.get(pa);
 				int b = listB.get(pb);
-				long aCnt = 0;
-				long bCnt = 0;
-
+				long countA = 0;
+				long countB = 0;
+				
 				while (pa < listA.size() && listA.get(pa) == a) {
-					aCnt++;
+					countA++;
 					pa++;
 				}
 				while (pb >= 0 && listB.get(pb) == b) {
-					bCnt++;
+					countB++;
 					pb--;
 				}
-
-				cnt += aCnt * bCnt;
+				
+				count += countA * countB;
 			}
-
-			else if (sum < T)
+			
+			else if(sum < T) {
 				pa++;
-
-			else if (sum > T)
+			}
+			else if(sum > T){
 				pb--;
+			}
 		}
-
-		return cnt;
-
+		
+		return count;
+		
 	}
 }
