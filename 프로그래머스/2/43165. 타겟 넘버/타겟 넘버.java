@@ -2,20 +2,34 @@ class Solution {
     static int result = 0;
     
     public int solution(int[] numbers, int target) {
-        dfs(numbers, 1, target, 0, 0, numbers.length);
-        return result;
+        return dfs(numbers, target, 0, 0);
     }
     
-    public void dfs(int[] numbers, int sign, int target, int idx, int compute, int length){
-        if(length == idx ){
+    public int dfs(int[] numbers, int target, int idx, int compute){
+        if(numbers.length == idx ){
             if(compute == target){
-                result++;
-                return;
+                return 1;
             }
-            return;
+            return 0;
         }
         
-        dfs(numbers, sign, target, idx + 1, compute + sign * numbers[idx], length);
-        dfs(numbers, sign, target, idx + 1, compute + (-sign * numbers[idx]), length);
+        return dfs(numbers, target, idx + 1, compute + numbers[idx]) + dfs(numbers, target, idx + 1, compute - numbers[idx]);
     }
 }
+
+// class Solution {
+//     public int solution(int[] numbers, int target) {
+//         int answer = 0;
+//         answer = dfs(numbers, 0, 0, target);
+//         return answer;
+//     }
+//     int dfs(int[] numbers, int n, int sum, int target) {
+//         if(n == numbers.length) {
+//             if(sum == target) {
+//                 return 1;
+//             }
+//             return 0;
+//         }
+//         return dfs(numbers, n + 1, sum + numbers[n], target) + dfs(numbers, n + 1, sum - numbers[n], target);
+//     }
+// }
