@@ -5,20 +5,23 @@ import java.util.*;
 // 시간복잡도 O(N^2) <= O(X) <= O(NlogN)예상
 class Solution {
     public int solution(int[][] targets) {
-        Arrays.sort(targets, (o1, o2) -> {
-            if(o1[1] == o2[1]){
-                return o1[0] - o2[0];
+        Arrays.sort(targets, (t1, t2) -> {
+            if(t1[1] == t2[1]){
+                return t1[0] - t2[0];
             }
-            return o1[1] - o2[1];
+            return t1[1] - t2[1];
         });
         
         int count = 1;
+        
         int end = targets[0][1];
         
         for(int[] target : targets){
-            if(end <= target[0]){
-                end = target[1];
+            int start = target[0];
+            
+            if(end <= start){
                 count++;
+                end = target[1];
             }
         }
         
