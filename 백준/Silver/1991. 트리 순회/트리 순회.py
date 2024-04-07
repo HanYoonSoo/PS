@@ -1,27 +1,17 @@
-# BOJ1991 트리순회
-
-N = int(input())
-
-arr = []
-
-for _ in range(N):
-    arr.append(input().split())
-
+import sys
 
 class Node:
-    def __init__(self, item, left, right):
+    def __init__(self, item, left = None, right = None):
         self.item = item
         self.left = left
         self.right = right
 
-
 def preorder(node):
-    print(node.item, end='')
+    print(node.item, end = '')
     if node.left != '.':
         preorder(tree[node.left])
     if node.right != '.':
         preorder(tree[node.right])
-
 
 def inorder(node):
     if node.left != '.':
@@ -30,7 +20,6 @@ def inorder(node):
     if node.right != '.':
         inorder(tree[node.right])
 
-
 def postorder(node):
     if node.left != '.':
         postorder(tree[node.left])
@@ -38,6 +27,11 @@ def postorder(node):
         postorder(tree[node.right])
     print(node.item, end='')
 
+N = int(sys.stdin.readline())
+arr = []
+
+for _ in range(N):
+    arr.append(sys.stdin.readline().split())
 
 tree = {}
 
@@ -51,3 +45,6 @@ inorder(tree['A'])
 print()
 
 postorder(tree['A'])
+print()
+
+
