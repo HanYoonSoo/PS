@@ -1,0 +1,56 @@
+import sys
+import heapq
+from collections import defaultdict
+n = int(sys.stdin.readline())
+work_list = [list(map(int,sys.stdin.readline().replace("\n","").split())) for _ in range(n)]
+
+# 날짜 순 오름차순 정렬
+# ex) 현재가 7일이면, 마감일이 6일 이전인 일들을 작업할 수 없다.
+sorted_list = sorted(work_list, key = lambda x: (-x[1], -x[0]))
+
+# 해당 날짜에 일했을 경우 받을 수 있는 페이의 최대금액을 저장한다.
+table = defaultdict(int)
+
+current_date = sorted_list[0][1]
+idx = 0
+
+# 마감 당일에 처리할 수는 없지만, 미리 작업해둘 수 있는 요청을 저장하는 배열
+spare = []
+
+while idx < len(sorted_list):
+	pay, day = sorted_list[idx][0], sorted_list[idx][1]
+	# 현재 날짜가 데드라인 날짜보다 뒤에 있는 경우 = 오늘까지 마감인 일은 없다.
+	# 미리 끝낼 수 있는 일들 중 가장 보수가 높은 일을 끝낼 수 있다.
+	if current_date > day:
+		# 미리 끝낼 수 있는 외주작업이 있는 경우
+		if spare:
+			table[current_date] = heapq.heappop(spare)[1]
+			current_date -= 1
+			continue
+	# 오늘 작업했을 때, 더 큰 돈을 벌 수 있는 작업이 있는 경우
+	if table[day] < pay:
+		# spare 작업 중에서 더 큰 돈이 되는 작업이 있을 경우
+		if spare and spare[0][1] > pay:
+				table[day] = heapq.heappop(spare)[1]
+				heapq.heappush(spare, (-pay, pay, day))
+		else:
+			table[day] = pay
+		current_date = day - 1
+	
+	# 해당 날짜에 받을 수 있는 보수 최댓값은 이미 정해진 경우 
+	# 나중에 시간남을 때 작업할 수 있도록 일단 저장
+	elif table[day] >= pay:
+		heapq.heappush(spare, (-pay, pay, day))
+
+	idx += 1
+
+# 작업 여유분이 남았고, 현재 날짜도 아직 1보다 큰 경우
+# 작업 분배를 더 할 수 있다.
+while spare and current_date > 0:
+	# 현재 날짜에 배분된 작업이 없을 경우
+	if table[current_date] == 0:
+		table[current_date] = heapq.heappop(spare)[1]
+	current_date -= 1
+	
+
+print(sum(table.values()))
