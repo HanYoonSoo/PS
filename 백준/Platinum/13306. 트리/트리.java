@@ -1,69 +1,108 @@
-import java.io.BufferedReader;
+import java.io.DataInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.StringTokenizer;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Main {
-    static int[] parent;
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    private int[] parents;
 
-        StringTokenizer st = new StringTokenizer(br.readLine());
+    private int find(int a) {
+        if (parents[a] < 0)
+            return a;
+        return parents[a] = find(parents[a]);
+    }
 
-        int N = Integer.parseInt(st.nextToken());
-        int Q = Integer.parseInt(st.nextToken());
+    private void union(int a, int b) {
+        a = find(a);
+        b = find(b);
+        if (a == b) return;
 
-        parent = new int[N + 1];
+        int h = parents[a]<parents[b]?a:b;
+        int l = parents[a]<parents[b]?b:a;
+        parents[h]+=parents[l];
+        parents[l]=h;
+    }
 
-        for(int i = 1; i <= N - 1; i++){
-            int parentNum = Integer.parseInt(br.readLine());
-            parent[i + 1] = parentNum;
+    private void solution() throws Exception {
+        int n = nextInt();
+        int q = nextInt();
+
+        // input: parent node num
+        int[] arr = new int[n+1];
+        for (int i = 2; i <= n; i++) {
+            arr[i] = nextInt();
         }
 
-        int count = 0;
-        for(int i = 1; i < N + Q; i++){
-            if(count == Q)
-                break;
-            st = new StringTokenizer(br.readLine());
-            int command = Integer.parseInt(st.nextToken());
+        // init union-find
+        parents = new int[n+1];
+        Arrays.fill(parents, -1);
 
-            if(command == 1){
-                int a = Integer.parseInt(st.nextToken());
-                int b = Integer.parseInt(st.nextToken());
-
-                if(checkParent(a, b)){
-                    System.out.println("YES");
-                } else{
-                    System.out.println("NO");
-                }
-                count++;
-            } else{
-                int a = Integer.parseInt(st.nextToken());
-                parent[a] = a;
+        // input: queries
+        ArrayList<Integer>[] query = new ArrayList[n-1+q];
+        for (int i = 0; i < query.length; i++) {
+            query[i] = new ArrayList<>(2);
+            int x = nextInt();
+            if (x == 1) {
+                query[i].add(nextInt());
+                query[i].add(nextInt());
+            } else {
+                query[i].add(nextInt());
             }
         }
+
+        // solve
+        ArrayList<Boolean> answer = new ArrayList<>();
+        for (int i = query.length-1; i >= 0; i--) {
+            ArrayList<Integer> cur = query[i];
+            if (cur.size() == 1) {
+                union(cur.get(0), arr[cur.get(0)]);
+            } else {
+                answer.add(find(cur.get(0))==find(cur.get(1)));
+            }
+        }
+
+        // print
+        StringBuilder sb = new StringBuilder();
+        for (int i = answer.size()-1; i >= 0; i--) {
+            if (answer.get(i)) sb.append('Y').append('E').append('S');
+            else sb.append('N').append('O');
+            sb.append('\n');
+        }
+        System.out.println(sb);
     }
 
-    private static boolean checkParent(int a, int b) {
-        while(a != parent[a] && a != 1){
-            a = parent[a];
-        }
+    public static void main(String[] args) throws Exception {
+        initFI();
+        new Main().solution();
+    }
 
-        while(b != parent[b] && b != 1){
-            b = parent[b];
-        }
 
-        return a == b;
+    private static final int DEFAULT_BUFFER_SIZE = 1 << 16;
+    private static DataInputStream inputStream;
+    private static byte[] buffer;
+    private static int curIdx, maxIdx;
+
+    private static void initFI() {
+        inputStream = new DataInputStream(System.in);
+        buffer = new byte[DEFAULT_BUFFER_SIZE];
+        curIdx = maxIdx = 0;
+    }
+
+    private static int nextInt() throws IOException {
+        int ret = 0;
+        byte c = read();
+        while (c <= ' ') c = read();
+        do {
+            ret = ret * 10 + c - '0';
+        } while ((c = read()) >= '0' && c <= '9');
+        return ret;
+    }
+
+    private static byte read() throws IOException {
+        if (curIdx == maxIdx) {
+            maxIdx = inputStream.read(buffer, curIdx = 0, DEFAULT_BUFFER_SIZE);
+            if (maxIdx == -1) buffer[0] = -1;
+        }
+        return buffer[curIdx++];
     }
 }
-//11 5
-//7
-//4
-//1
-//9
-//11
-//1
-//11
-//1
-//3
-//7
