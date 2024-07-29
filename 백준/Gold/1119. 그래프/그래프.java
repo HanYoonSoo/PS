@@ -1,63 +1,84 @@
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.StringTokenizer;
 
 public class Main {
-    static List<Integer>[] v = new ArrayList[50];
-    static boolean[] visited = new boolean[50];
+    static List<List<Integer>> graph;
+    static boolean[] visited;
+    
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-    static int dfs(int now) {
-        int ret = 1;
-        for (int next : v[now]) {
-            if (visited[next]) continue;
-            visited[next] = true;
-            ret += dfs(next);
-        }
-        return ret;
-    }
+        int N = Integer.parseInt(br.readLine());
 
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        int N = sc.nextInt();
-        if (N == 1) {
-            System.out.println("0");
-            return;
+        if(N == 1) {
+            System.out.println(0);
+            System.exit(0);
         }
 
-        int cnt = 0;
-        for (int i = 0; i < N; i++) {
-            v[i] = new ArrayList<>();
-            String a = sc.next();
-            for (int t = 0; t < a.length(); t++) {
-                if (a.charAt(t) == 'Y') {
-                    v[i].add(t);
-                    cnt++;
+        graph = new ArrayList<>();
+        visited = new boolean[N];
+        
+        for(int i = 0; i <= N; i++){
+            graph.add(new ArrayList<>());
+        }
+
+        int total = 0;
+        for(int i = 0; i < N; i++){
+            String[] str = br.readLine().split("");
+            for(int j = 0; j < N; j++){
+                if(str[j].equals("Y")) {
+                    graph.get(i).add(j);
+                    graph.get(j).add(i);
+                    total++;
                 }
             }
         }
 
-        Arrays.fill(visited, false);
-        cnt /= 2;
-        List<Integer> s = new ArrayList<>();
+        total /= 2;
 
-        for (int i = 0; i < N; i++) {
-            if (!visited[i]) {
+        List<Integer> teamCount = new ArrayList<>();
+
+        for(int i = 0; i < N; i++){
+            if(!visited[i]){
                 visited[i] = true;
-                s.add(dfs(i));
+                teamCount.add(dfs(i));
             }
         }
 
-        int sum = 0;
-        for (int a : s) {
-            sum += a - 1;
-            if (a == 1) {
-                System.out.println("-1");
-                return;
+        int minEdge = 0;
+
+        for(int team : teamCount){
+            minEdge += team - 1;
+
+            if(team == 1){
+                System.out.println(-1);
+                System.exit(0);
             }
         }
 
-        if (s.size() - 1 <= cnt - sum) {
-            System.out.println(s.size() - 1);
-        } else {
-            System.out.println("-1");
+        if(teamCount.size() - 1 <= total - minEdge){
+            System.out.println(teamCount.size() - 1);
+        } else{
+            System.out.println(-1);
         }
+
+//        System.out.println((teamCount.size() - 1) + " " + (total - minEdge));
+    }
+
+    private static int dfs(int node) {
+        int count = 1;
+
+        for(int curr : graph.get(node)){
+            if(!visited[curr]){
+                visited[curr] = true;
+                count += dfs(curr);
+            }
+        }
+
+        return count;
     }
 }
