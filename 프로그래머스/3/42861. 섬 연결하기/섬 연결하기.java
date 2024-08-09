@@ -56,8 +56,6 @@ class Solution {
             answer += curr.weight;
             
             for(Edge e : graph.get(curr.end)){
-                    // System.out.println(curr.end + " " + e.end);
-                // visited[e.end] = true;
                 pq.add(new Edge(e.end, e.weight));
             }
         }
