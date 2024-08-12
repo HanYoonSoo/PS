@@ -1,60 +1,72 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringTokenizer;
 
 public class Main {
+    /**
+     * 5 3
+     * -1 1 2 3 4
+     * 2 2
+     * 3 4
+     * 5 6
+     */
 
-    static int N, M;
-
-    static List<ArrayList<Integer>> graph;
-    static int[] dist;
-
+    static List<List<Integer>> company;
+    static int[] scores;
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-        String[] temp = br.readLine().split(" ");
-        N = Integer.parseInt(temp[0]);
-        M = Integer.parseInt(temp[1]);
+        StringTokenizer st = new StringTokenizer(br.readLine());
 
-        temp = br.readLine().split(" ");
+        int N = Integer.parseInt(st.nextToken());
+        int M = Integer.parseInt(st.nextToken());
 
-        graph = new ArrayList<>();
-        dist = new int[N + 1];
+        company = new ArrayList<>();
+        scores = new int[N + 1];
 
-        for(int i = 0; i <= N; i++){
-            graph.add(new ArrayList<>());
-        }
+        for(int i = 0; i <= N; i++)
+            company.add(new ArrayList<>());
 
-        for(int i = 1; i < N; i++){
-            int num = Integer.parseInt(temp[i]);
-            graph.get(num).add(i + 1);
+        st = new StringTokenizer(br.readLine());
+
+        st.nextToken();
+        for(int i = 2; i <= N; i++){
+            int manager = Integer.parseInt(st.nextToken());
+
+            company.get(manager).add(i);
         }
 
         for(int i = 0; i < M; i++){
-            temp = br.readLine().split(" ");
+            st = new StringTokenizer(br.readLine());
 
-            int start = Integer.parseInt(temp[0]);
-            int w = Integer.parseInt(temp[1]);
+            int employee = Integer.parseInt(st.nextToken());
+            int score = Integer.parseInt(st.nextToken());
 
-            dist[start] += w;
+            scores[employee] += score;
+
         }
 
-        dfs(1,0);
+        dfs(1);
 
         for(int i = 1; i <= N; i++){
-            System.out.print(dist[i] + " ");
+            System.out.print(scores[i] + " ");
         }
-
-
     }
 
-    public static void dfs(int start, int w){
-        dist[start] += w;
-        for(int next : graph.get(start)){
-            dfs(next, dist[start]);
+    public static void dfs(int employee){
+        for(int emp : company.get(employee)){
+            scores[emp] += scores[employee];
+            dfs(emp);
         }
     }
 }
+
+//5 4
+//-1 1 2 3 4
+//2 2
+//3 4
+//5 6
+//3 4
