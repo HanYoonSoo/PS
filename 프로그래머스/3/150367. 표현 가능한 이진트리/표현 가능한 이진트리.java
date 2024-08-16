@@ -8,6 +8,10 @@ class Solution {
         for(long number : numbers){
             String binaryNum = Long.toBinaryString(number);
             
+            // System.out.println(binaryNum);
+            
+            // 2^N - 1
+            
             int n = 0;
             
             while((Math.pow(2, n) - 1) < binaryNum.length()){
