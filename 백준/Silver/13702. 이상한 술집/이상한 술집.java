@@ -22,10 +22,10 @@ public class Main {
             max = Math.max(arr[i], max);
         }
 
-        if(max == 0){
-            System.out.println(0);
-            return;
-        }
+//        if(max == 0){
+//            System.out.println(0);
+//            return;
+//        }
 
         long left = 1;
         long right = max;
@@ -43,7 +43,6 @@ public class Main {
             } else{
                 left = mid + 1;
             }
-
 //            System.out.println(mid);
         }
 
