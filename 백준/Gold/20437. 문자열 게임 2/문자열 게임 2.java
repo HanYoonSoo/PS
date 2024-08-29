@@ -16,10 +16,11 @@ public class Main {
             Map<String, Queue<Integer>> indexMap = new HashMap<>();
 
             List<Integer> result3 = new ArrayList<>();
-            List<Integer> result4 = new ArrayList<>();
+
+            int min = Integer.MAX_VALUE;
+            int max = 0;
 
             int K = Integer.parseInt(br.readLine());
-            int start = -1;
             for(int i = 0; i < str.length; i++){
                 if(!indexMap.containsKey(str[i])){
                     indexMap.put(str[i], new LinkedList<>());
@@ -31,30 +32,34 @@ public class Main {
                 map.put(str[i], map.getOrDefault(str[i], 0) + 1);
 
                 if(map.get(str[i]) >= K){
-//                    System.out.println(str[i] + " " + i + " " + indexMap.get(str[i]));
+                    int compute = i - indexMap.get(str[i]).poll() + 1;
 
-//                    if(start == -1){
-//                        start = i;
-//                    }
-//
-//                    if(map.get(str[i - K - 1]).equals(str[i])){
-//                        result4.add(i - (i - K - 1) + 1);
-//                        start++;
-//                    }
+                    if(min > compute){
+                        min = compute;
+                    }
 
-                    result3.add(i - indexMap.get(str[i]).poll() + 1);
+                    if(max < compute){
+                        max = compute;
+                    }
+//                    min = Math.min(compute, min);
+//                    max = Math.max(compute, max);
+//                    result3.add(i - indexMap.get(str[i]).poll() + 1);
                     map.put(str[i], map.get(str[i]) - 1);
                 }
             }
 
-            if(result3.size() != 0) {
-                Collections.sort(result3);
-//                Collections.sort(result4);
-                System.out.println(result3.get(0) + " " + result3.get(result3.size() - 1));
-            } else{
+//            if(result3.size() != 0) {
+////                Collections.sort(result3);
+//                System.out.println(min + " " + max);
+//            } else{
+//                System.out.println(-1);
+//            }
+
+            if(min != Integer.MAX_VALUE && max != 0){
+                System.out.println(min + " " + max);
+            } else {
                 System.out.println(-1);
             }
         }
     }
 }
-//superaquatornado
