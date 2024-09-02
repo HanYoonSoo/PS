@@ -11,7 +11,7 @@ public class Main {
 
         int M = Integer.parseInt(st.nextToken());
         int N = Integer.parseInt(st.nextToken());
-        int L = Integer.parseInt(st.nextToken());
+        long L = Long.parseLong(st.nextToken());
 
         st = new StringTokenizer(br.readLine());
 
@@ -34,21 +34,28 @@ public class Main {
             points.add(new int[]{x, y});
         }
 
-        Collections.sort(points, (o1, o2) -> {
-            if(o1[0] == o2[0]){
-                return o1[1] - o2[1];
-            }
-            return o1[0] - o2[0];
-        });
-
         int count = 0;
 
-        boolean[] visited = new boolean[N];
-        for(int i = 0; i < M; i++){
-            for(int j = 0; j < points.size(); j++){
-                if(!visited[j] && Math.abs(arr[i] - points.get(j)[0]) + points.get(j)[1] <= L){
+        for(int i = 0; i < N; i++){
+            int left = 0;
+            int right = M - 1;
+
+            while(left <= right){
+                int mid = (left + right) / 2;
+
+                long dist = Math.abs(arr[mid] - points.get(i)[0]) + points.get(i)[1];
+
+                if(dist <= L){
                     count++;
-                    visited[j] = true;
+                    break;
+                }
+
+                // 거리가 L보다 큰 경우
+                // 1 4 6 9
+                if(arr[mid] > points.get(i)[0]){
+                    right = mid - 1;
+                } else{
+                    left = mid + 1;
                 }
             }
         }
