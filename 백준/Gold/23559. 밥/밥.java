@@ -38,12 +38,16 @@ public class Main {
             subArr[i] = new Sub(A - B, i);
         }
 
-        Arrays.sort(subArr, ((o1, o2) -> o2.value - o1.value));
+        Arrays.sort(subArr, ((o1, o2) -> Math.abs(o2.value) - Math.abs(o1.value)));
 
+        // 5000
+        // 6000 1000
+        // 2500 2500
+        // 2500 2500
+        // 2500 2500
         int result = 0;
         for(int i = 0; i < N; i++){
             int value = subArr[i].value;
-
             if(X - 5000 >= (N - 1 - i) * 1000 && value > 0){
                 X -= 5000;
                 result += arr[subArr[i].idx][0];
@@ -56,3 +60,7 @@ public class Main {
         System.out.println(result);
     }
 }
+
+// 40 10
+// 21 10
+// 50 40
