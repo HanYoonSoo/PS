@@ -1,61 +1,48 @@
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
-
-public class Main {
-	static String[][] grid;
-	static boolean[] visited = new boolean[26];
-	static int R;
-	static int N;
-	static int result;
-	static int dx[] = {-1, 1, 0, 0};
-	static int dy[] = {0, 0, -1, 1};
-	
-	public static void main(String[] args) {
-		Scanner scan = new Scanner(System.in);
-		
-		R = scan.nextInt();
-		N = scan.nextInt();
-		
-		scan.nextLine();
-		
-		grid = new String[R][N];
-		
-		for(int i = 0; i < R; i++) {
-			String[] temp = scan.nextLine().split("");
-			for(int j = 0; j < N; j++) {
-				grid[i][j] = temp[j];
-			}
-		}
-		
-		result = 0;
-		alpha(0, 0, 0);
-		
-		System.out.println(result);
-	}
-	
-	public static void alpha(int x, int y, int count) {
-		if(visited[grid[x][y].charAt(0) - 'A']) {
-			result = Math.max(result,  count);
-			return;
-		}
-		else {
-			visited[grid[x][y].charAt(0) - 'A'] = true;
-			for(int i = 0; i < 4; i++) {
-				int nx = x + dx[i];
-				int ny = y + dy[i];
-				
-				if(nx >= 0 && nx < R && ny >= 0 && ny < N) {
-					alpha(nx, ny, count + 1);
-				}
-			}
-			
-			visited[grid[x][y].charAt(0) - 'A'] = false;
-			
-		}
-	}
-	
-	
-	
+import java.util.*;
+ 
+public class Main {    
+ 
+    static int r, c;
+    static int[][] board;
+    static int[] dx = {-1, 0, 1, 0};
+    static int[] dy = {0, 1, 0, -1};
+    static int max = 0;
+    static boolean[] alpha;
+    
+    public static void main(String[] args) {
+        Scanner scan = new Scanner(System.in);
+ 
+        r = scan.nextInt();
+        c = scan.nextInt();
+        scan.nextLine();
+        
+        //board를 입력받는다.
+        board = new int[r][c];
+        for(int i = 0; i < r; i++) {
+            String str = scan.nextLine();
+            for(int j = 0; j < c; j++) {
+                board[i][j] = str.charAt(j) - 'A';
+            }
+        }
+        
+        alpha = new boolean[26]; //알파벳을 이전에 방문했는지 여부 체크.
+        backtracking(0, 0, 1);
+        System.out.println(max);
+    }
+    
+    public static void backtracking(int x, int y, int len) {
+        alpha[board[x][y]] = true; 
+        max = Math.max(max, len);
+        
+        for(int i = 0; i < 4; i++) {
+            int nx = x + dx[i];
+            int ny = y + dy[i];
+            if(nx >= 0 && ny >= 0 && nx < r && ny < c) {
+                if(alpha[board[nx][ny]] == false) {
+                    backtracking(nx, ny, len + 1);
+                    alpha[board[nx][ny]] = false;
+                }
+            }
+        }
+    }
 }
