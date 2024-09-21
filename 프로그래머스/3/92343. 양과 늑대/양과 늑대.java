@@ -1,6 +1,7 @@
 import java.util.*;
 
 class Solution {
+    
     class Node{
         int kind;
         List<Integer> child;
@@ -11,63 +12,57 @@ class Solution {
         }
     }
     
-    Node[] tree;
     int N;
-    int M;
-    int answer;
+    Node[] tree;
+    int result = 0;
     public int solution(int[] info, int[][] edges) {
-    
         N = info.length;
+        
         tree = new Node[N];
         
         for(int i = 0; i < N; i++){
             tree[i] = new Node(info[i]);
         }
         
-        M = edges.length;
-        
         for(int[] edge : edges){
-            int a = edge[0];
-            int b = edge[1];
+            int parent = edge[0];
+            int child = edge[1];
             
-            tree[a].child.add(b);
+            tree[parent].child.add(child);
         }
-        
-        answer = 0;
         
         dfs(0, 0, 0, new ArrayList<>());
         
-        return answer;
+        return result;
     }
     
-    public void dfs(int root, int sheep, int wolf, List<Integer> path){        
+    public void dfs(int root, int sheep, int wolf, List<Integer> path){
         if(tree[root].kind == 0){
             sheep++;
         } else{
             wolf++;
         }
         
-        // System.out.println(root + " " + sheep + " " + wolf);
-        
         if(sheep == wolf){
             return;
         }
         
         if(sheep > wolf){
-            answer = Math.max(answer, sheep);
+            result = Math.max(sheep, result);
         }
         
-        List<Integer> newPath = new ArrayList<>();
-        newPath.addAll(path);
+        List<Integer> nextList = new ArrayList<>();
         
-        newPath.remove(Integer.valueOf(root));
+        nextList.addAll(path);
+        
+        nextList.remove(Integer.valueOf(root));
         
         for(int child : tree[root].child){
-            newPath.add(child);
+            nextList.add(child);
         }
         
-        for(int node : newPath){
-            dfs(node, sheep, wolf, newPath);
+        for(int nextNode : nextList){
+            dfs(nextNode, sheep, wolf, nextList);
         }
     }
 }
