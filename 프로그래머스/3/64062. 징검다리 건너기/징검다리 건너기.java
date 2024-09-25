@@ -1,41 +1,32 @@
 class Solution {
     public int solution(int[] stones, int k) {
         int left = 1;
-        int right = 200_000_000;
-        
-        // stones = new int[]{1, 1, 1};
-        
-        // if(stones.length())
+        int right = 200000000;
         
         while(left <= right){
             int mid = (left + right) / 2;
             
-            // System.out.println(left + " " + mid + " " + right);
-            
-            int len = 1;
+            System.out.println(left + " " + mid + " " + right);
+            int len = 0;
             int maxLen = 0;
-            boolean flag = false;
             for(int i = 0; i < stones.length; i++){
                 if(stones[i] - mid <= 0){
-                    if(flag){
-                        len++;
-                    } else{
-                        flag = true;
-                    }
-                    maxLen = Math.max(maxLen, len);
+                    len++;
                 } else{
-                    flag = false;
-                    len = 1;
+                    maxLen = Math.max(maxLen, len);
+                    len = 0;
                 }
             }
             
+            System.out.println("maxLen " + maxLen);
             if(maxLen < k){
-                left = mid + 1;
-            } else{
                 right = mid - 1;
+            } else{
+                left = mid + 1;
             }
         }
         
+        System.out.println(left);
         return left;
     }
 }
