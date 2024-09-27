@@ -1,28 +1,32 @@
 class Solution {
     public int solution(String s) {
+        // s = "abaacde";
         int answer = 0;
-        for (int i = 0; i < s.length(); i++) {
-            answer = Math.max(answer, getPalindromeSize(s, i - 1, i + 1));
-            answer = Math.max(answer, getPalindromeSize(s, i, i + 1));
+        
+        for(int i = 0; i < s.length(); i++){
+            answer = Math.max(answer, findLongPalindrome(i - 1, i + 1, s));
+            answer = Math.max(answer, findLongPalindrome(i, i + 1, s));
         }
 
         return answer;
     }
-
-    public int getPalindromeSize(String s, int sp, int ed) {
-        while (sp >= 0 && ed < s.length() && s.charAt(sp) == s.charAt(ed)) {
-            sp--;
-            ed++;
+    
+    public int findLongPalindrome(int left, int right, String s){
+        while((left >= 0 && right < s.length()) && s.charAt(left) == s.charAt(right)){
+            left--;
+            right++;
         }
-
-        while (ed == s.length() && sp >= 0 && s.charAt(sp) == s.charAt(ed - 1)) {
-            sp--;
+        
+        while(right == s.length() && left >= 0 && s.charAt(left) == s.charAt(right - 1)){
+            left--;
         }
-
-        while (sp == -1 && ed < s.length() && s.charAt(sp + 1) == s.charAt(ed)) {
-            ed++;
+        
+        while(left == -1 && right < s.length() && s.charAt(left + 1) == s.charAt(right)){
+            right++;
         }
-
-        return ed - sp - 1;
+        
+        return right - left - 1;
     }
 }
+
+// a c a
