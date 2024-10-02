@@ -2,58 +2,46 @@ import java.util.*;
 
 class Solution {
     public int[] solution(long[] numbers) {
-        int[] answer = new int[numbers.length];
+        int[] result = new int[numbers.length];
         
-        int idx = 0;
-        for(long number : numbers){
-            String binaryNum = Long.toBinaryString(number);
+        for(int i = 0; i < numbers.length; i++){
+            String binaryNum = Long.toBinaryString(numbers[i]);
             
-            // System.out.println(binaryNum);
+            int power = 0;
             
-            // 2^N - 1
-            
-            int n = 0;
-            
-            while((Math.pow(2, n) - 1) < binaryNum.length()){
-                n++;
+            while(Math.pow(2, power) - 1 < binaryNum.length()){
+                power++;
             }
             
-            // System.out.println(n);
+            int addZero = (int)((Math.pow(2, power) - 1) - binaryNum.length());
             
-            int repeat = (int)((Math.pow(2, n) - 1) - binaryNum.length());
-            binaryNum = "0".repeat(repeat).concat(binaryNum);
+            String binaryTree = "0".repeat(addZero).concat(binaryNum);
             
-            // System.out.println(binaryNum);
-        
-            
-            if(isBinaryTree(binaryNum)){
-                answer[idx++] = 1; 
+            if(isBinaryTree(binaryTree)){
+                result[i] = 1;
             } else{
-                answer[idx++] = 0;
+                result[i] = 0;
             }
         }
         
-        return answer;
+        return result;
     }
     
-    public boolean isBinaryTree(String tree){
-        int mid = (tree.length() - 1) / 2;
+    public boolean isBinaryTree(String binaryTree){
+        int root = binaryTree.length() / 2;
+        String leftTree = binaryTree.substring(0, root);
+        String rightTree = binaryTree.substring(root + 1, binaryTree.length());
         
-        String leftTree = tree.substring(0, mid);
-        String rightTree = tree.substring(mid + 1, tree.length());
-        
-        boolean compare = true;
-        
-        // 왼쪽과 오른쪽 서브트리가 비어 있지 않을 경우에만 체크
-        if (leftTree.length() > 0 && rightTree.length() > 0) {
-            boolean leftZero = leftTree.charAt((leftTree.length() - 1) / 2) == '0';
-            boolean rightZero = rightTree.charAt((rightTree.length() - 1) / 2) == '0';
+        if(leftTree.length() > 0 && rightTree.length() > 0){
+            boolean leftZero = leftTree.charAt(leftTree.length() / 2) == '0';
+            boolean rightZero = rightTree.charAt(rightTree.length() / 2) == '0';
             
-            // 루트가 '0'인데 왼쪽 또는 오른쪽 서브트리의 중앙이 '1'이면 유효하지 않음
-            if (tree.charAt(mid) == '0' && (!leftZero || !rightZero)) {
+            if(binaryTree.charAt(root) == '0' && (!leftZero || !rightZero)){
                 return false;
             }
         }
+        
+        boolean compare = true;
         
         if(leftTree.length() >= 3){
             compare = isBinaryTree(leftTree);
