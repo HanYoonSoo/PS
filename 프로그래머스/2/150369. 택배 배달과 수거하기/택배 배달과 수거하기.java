@@ -2,29 +2,32 @@ class Solution {
     public long solution(int cap, int n, int[] deliveries, int[] pickups) {
         long answer = 0;
         
-        for(int i = n - 1; i >= 0;){
+        for(int i = n - 1; i >= 0; ){
             if(deliveries[i] == 0 && pickups[i] == 0){
                 i--;
                 continue;
             }
             
-            compute(cap, i, deliveries);
-            compute(cap, i, pickups);
+            compute(deliveries, cap, i);
+            compute(pickups, cap, i);
             
             answer += (i + 1) * 2;
         }
+        
         return answer;
     }
     
-    public void compute(int cap, int idx, int[] arr){
-        while(idx >= 0){
-            if(cap >= arr[idx]){
-                cap -= arr[idx];
-                arr[idx--] = 0;
+    public void compute(int[] arr, int cap, int idx){
+        for(int i = idx; i >= 0; i--){
+            if(cap >= arr[i]){
+                cap -= arr[i];
+                arr[i] = 0;
             } else{
-                arr[idx] -= cap;
+                arr[i] -= cap;
+                cap = 0;
                 break;
             }
         }
     }
+
 }
