@@ -18,46 +18,52 @@ class Solution {
 
     public void dfs(int idx, int count) {
         if (count == N / 2) {
-            List<Integer> aList = new ArrayList<>();
-            List<Integer> bList = new ArrayList<>();
+            List<Integer> aSubset = new ArrayList<>();
+            List<Integer> bSubset = new ArrayList<>();
 
+            // 방문된 인덱스는 aSubset, 방문되지 않은 인덱스는 bSubset에 추가
             for (int i = 0; i < N; i++) {
-                if (!visited[i]) {
-                    bList.add(i);
+                if (visited[i]) {
+                    aSubset.add(i);
                 } else {
-                    aList.add(i);
+                    bSubset.add(i);
                 }
             }
 
             // 각 조합에 대한 점수 계산
-            HashMap<Integer, Integer> myScoreCnt = calculateScoreCnt(aList);
-            HashMap<Integer, Integer> oppScoreCnt = calculateScoreCnt(bList);
+            Map<Integer, Integer> aScoreMap = calculateScore(aSubset);
+            Map<Integer, Integer> bScoreMap = calculateScore(bSubset);
 
-            int win = 0, equal = 0, lose = 0;
-            for (int m : myScoreCnt.keySet()) {
-                for (int o : oppScoreCnt.keySet()) {
-                    if (m > o) {
-                        win += (myScoreCnt.get(m) * oppScoreCnt.get(o));
-                    } else if (m == o) {
-                        equal += (myScoreCnt.get(m) * oppScoreCnt.get(o));
+            int win = 0, same = 0, lose = 0;
+
+            // aScoreMap과 bScoreMap을 비교하여 승패 계산
+            for (int aKey : aScoreMap.keySet()) {
+                for (int bKey : bScoreMap.keySet()) {
+                    if (aKey > bKey) {
+                        win += (aScoreMap.get(aKey) * bScoreMap.get(bKey));
+                    } else if (aKey == bKey) {
+                        same += (aScoreMap.get(aKey) * bScoreMap.get(bKey));
                     } else {
-                        lose += (myScoreCnt.get(m) * oppScoreCnt.get(o));
+                        lose += (aScoreMap.get(aKey) * bScoreMap.get(bKey));
                     }
                 }
             }
 
-            double ratio = win / (double) (win + equal + lose);
+            // 승리 비율 계산
+            double ratio = (double) win / (win + same + lose);
 
+            // 더 나은 비율이 나오면 정답을 갱신
             if (result < ratio) {
                 result = ratio;
-                for (int i = 0; i < aList.size(); i++) {
-                    answer[i] = aList.get(i) + 1; // 인덱스 1 기반으로 반환
+                for (int i = 0; i < aSubset.size(); i++) {
+                    answer[i] = aSubset.get(i) + 1; // 1-based index로 반환
                 }
             }
 
             return;
         }
 
+        // DFS로 조합 탐색
         for (int i = idx; i < N; i++) {
             if (!visited[i]) {
                 visited[i] = true;
@@ -68,35 +74,36 @@ class Solution {
     }
 
     // 주사위 조합에 대한 점수 합산
-    private HashMap<Integer, Integer> calculateScoreCnt(List<Integer> combination) {
-        HashMap<Integer, Integer> scoreCnt = new HashMap<>();
-        List<Integer> score = new ArrayList<>();
+    public Map<Integer, Integer> calculateScore(List<Integer> subSet) {
+        List<Integer> scores = new ArrayList<>();
 
-        for (int i = 0; i < combination.size(); i++) {
-            int idx = combination.get(i);
+        // 선택된 조합의 점수를 계산
+        for (int i = 0; i < subSet.size(); i++) {
+            int idx = subSet.get(i);
 
-            if (score.size() == 0) {
-                // 첫 번째 주사위는 그대로 점수 추가
+            if (scores.isEmpty()) {
+                // 첫 번째 주사위의 점수는 그대로 추가
                 for (int j = 0; j < 6; j++) {
-                    score.add(arr[idx][j]);
+                    scores.add(arr[idx][j]);
                 }
             } else {
-                // 이후 주사위는 기존 점수와 더함
-                int size = score.size();
+                // 이후 주사위의 점수를 기존 점수와 더함
+                int size = scores.size();
                 for (int j = 0; j < size; j++) {
-                    int s = score.remove(0);
+                    int score = scores.remove(0);
                     for (int k = 0; k < 6; k++) {
-                        score.add(arr[idx][k] + s);
+                        scores.add(arr[idx][k] + score);
                     }
                 }
             }
         }
 
-        // 점수 카운트
-        for (int s : score) {
-            scoreCnt.put(s, scoreCnt.getOrDefault(s, 0) + 1);
+        // 점수를 카운트해서 반환
+        Map<Integer, Integer> scoreMap = new HashMap<>();
+        for (int score : scores) {
+            scoreMap.put(score, scoreMap.getOrDefault(score, 0) + 1);
         }
 
-        return scoreCnt;
+        return scoreMap;
     }
 }
