@@ -1,6 +1,7 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.TreeSet;
 import java.util.HashMap;
@@ -13,12 +14,11 @@ public class Main {
         int N = Integer.parseInt(st.nextToken());
         int Q = Integer.parseInt(st.nextToken());
 
-        TreeSet<Integer> availablePorts = new TreeSet<>();
-        HashMap<Integer, Integer> map = new HashMap<>();
-
-        // 초기 포트 번호 세팅
+        TreeSet<Integer> setPorts = new TreeSet<>();
+        Map<Integer, Integer> map = new HashMap<>();
+        
         for (int i = 1; i <= N; i++) {
-            availablePorts.add(i);
+            setPorts.add(i);
         }
 
         StringBuilder sb = new StringBuilder();
@@ -30,21 +30,20 @@ public class Main {
 
             if (command == 1) {
                 // 주어진 포트 번호 이상의 사용 가능한 포트를 찾음
-                Integer assignedPort = availablePorts.ceiling(port);
-
+                Integer assignedPort = setPorts.ceiling(port);
+                
                 if (assignedPort == null) {
                     sb.append(-1).append("\n");
                 } else {
                     map.put(assignedPort, i);
-                    availablePorts.remove(assignedPort);
+                    setPorts.remove(assignedPort);
                     sb.append(assignedPort).append("\n");
                 }
             } else {
-                // 포트 해제
                 if (map.containsKey(port)) {
                     sb.append(map.get(port)).append("\n");
                     map.remove(port);
-                    availablePorts.add(port);
+                    setPorts.add(port);
                 } else {
                     sb.append(-1).append("\n");
                 }
