@@ -1,64 +1,61 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.nio.Buffer;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.PriorityQueue;
+import java.util.*;
 
 public class Main {
-    static int N, K;
-
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-        String[] temp = br.readLine().split(" ");
-        N = Integer.parseInt(temp[0]);
-        K = Integer.parseInt(temp[1]);
+        StringTokenizer st = new StringTokenizer(br.readLine());
 
-        PriorityQueue<int[]> jew = new PriorityQueue<int[]>((a, b) -> {
-            if(a[0] == b[0]){
-                return b[1] - a[1];
-            }
-            else{
-                return a[0] - b[0];
-            }
+        int N = Integer.parseInt(st.nextToken());
+        int K = Integer.parseInt(st.nextToken());
+
+        PriorityQueue<int[]> jew = new PriorityQueue<>((o1, o2) -> {
+            if(o1[0] == o2[0])
+                return o2[1] - o1[1];
+            return o1[0] - o2[0];
         });
 
         for(int i = 0; i < N; i++){
-            temp = br.readLine().split(" ");
-            jew.add(new int[]{Integer.parseInt(temp[0]), Integer.parseInt(temp[1])});
+            st = new StringTokenizer(br.readLine());
+
+            int M = Integer.parseInt(st.nextToken());
+            int V = Integer.parseInt(st.nextToken());
+
+            jew.add(new int[]{M, V});
         }
 
-        List<Long> bag = new ArrayList<>();
+        int[] bag = new int[K];
 
         for(int i = 0; i < K; i++){
-            bag.add(Long.parseLong(br.readLine()));
+            bag[i] = Integer.parseInt(br.readLine());
         }
 
-        Collections.sort(bag);
+        Arrays.sort(bag);
 
-        PriorityQueue<Integer> heap = new PriorityQueue<>(Collections.reverseOrder());
+        PriorityQueue<Integer> pq = new PriorityQueue<>((o1, o2) -> o2 - o1);
 
-        long result = 0;
+        long total = 0;
 
-        for(int i = 0; i < bag.size(); i++){
-            long weight = bag.get(i);
+        for(int i = 0; i < K; i++){
+            int bagW = bag[i];
+
             while(!jew.isEmpty()){
-                if(weight >= jew.peek()[0]){
-                    heap.add(jew.poll()[1]);
-                }
-                else{
+                if(bagW >= jew.peek()[0]){
+                    pq.add(jew.poll()[1]);
+                } else{
                     break;
                 }
             }
 
-            if(!heap.isEmpty()){
-                result += heap.poll();
+            if(!pq.isEmpty()){
+                total += pq.poll();
             }
+
         }
 
-        System.out.println(result);
+        System.out.println(total);
     }
 }
