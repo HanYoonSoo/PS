@@ -7,28 +7,18 @@ public class Main {
 
     static class Edge implements Comparable<Edge>{
         int end;
-        int w;
+        long w;
 
-        public Edge(int end, int w){
+        public Edge(int end, long w){
             this.end = end;
             this.w = w;
         }
 
         @Override
         public int compareTo(Edge e){
-            return this.w - e.w;
+            return Long.compare(this.w, e.w);
         }
 
-    }
-
-    static class Node{
-        int maxW;
-        int totalDist;
-
-        public Node(int maxW){
-            this.maxW = maxW;
-            totalDist = 0;
-        }
     }
 
     static int N;
@@ -90,14 +80,13 @@ public class Main {
 
     public static boolean dijkstra(long mid){
         PriorityQueue<Edge> pq = new PriorityQueue<>();
-        Node[] nodes = new Node[N + 1];
 
-        for(int i = 1; i <= N; i++){
-            nodes[i] = new Node(Integer.MAX_VALUE);
-        }
+        long[] dist = new long[N + 1];
 
+        Arrays.fill(dist, Long.MAX_VALUE);
         pq.add(new Edge(A, 0));
-        nodes[A].maxW = 0;
+
+        dist[A] = 0;
 
 //        int max = 0;
 
@@ -105,26 +94,31 @@ public class Main {
             Edge curr = pq.poll();
 
             int node = curr.end;
-            int w = curr.w;
+            long w = curr.w;
 
-            if(nodes[node].maxW < w){
+            if(dist[node] < w){
                 continue;
             }
 
             for(Edge edge : graph.get(node)){
-                int compute = Math.max(edge.w, w);
+                long compute = w + edge.w;
 
-                int total = nodes[node].totalDist + edge.w;
-
-                if(total <= C && nodes[edge.end].maxW > compute){
-                    nodes[edge.end].maxW = compute;
-                    nodes[edge.end].totalDist = total;
+                if(dist[edge.end] > compute && edge.w <= mid && compute <= C){
+                    dist[edge.end] = compute;
                     pq.add(new Edge(edge.end, compute));
                 }
             }
         }
 
-//        System.out.println(nodes[B].maxW + " " + nodes[B].totalDist);
-        return nodes[B].maxW <= mid && nodes[B].totalDist <= C;
+        return dist[B] <= C;
     }
 }
+
+//7 7 1 7 6
+//1 2 3
+//2 6 1
+//1 3 2
+//3 4 1
+//4 5 2
+//5 6 1
+//6 7 1
