@@ -15,13 +15,13 @@ class Solution {
         
         Arrays.sort(d);
         
-        dfs(0, 1, dist.length - 1);
+        dfs(0, 0, dist.length - 1);
         return result == Integer.MAX_VALUE ? -1 : result;
     }
     
     public void dfs(int fix, int count, int idx) {
         if (fix == w.length) {
-            count--;
+            // count--;
             result = Math.min(result, count);
             return;
         }
