@@ -2,51 +2,47 @@ import java.util.*;
 
 class Solution {
     public int solution(int coin, int[] cards) {
-        Set<Integer> base = new HashSet<>();
+        Set<Integer> init = new HashSet<>();
         Set<Integer> having = new HashSet<>();
         
         int N = cards.length;
         
         for(int i = 0; i < N / 3; i++){
-            base.add(cards[i]);
+            init.add(cards[i]);
         }
+        
+        int round = 1;
         
         int target = N + 1;
         
-        int idx = N / 3;
-        
-        int result = 0;
-        
-        while(true){
-            if(idx >= N){
-                break;
-            }
+        for(int i = N / 3; i < N; i += 2){
             boolean compare = false;
+            int first = cards[i];
+            int second = cards[i + 1];
+            // round++;
             
-            having.add(cards[idx]);
-            having.add(cards[idx + 1]);
+            having.add(first);
+            having.add(second);
             
-            idx += 2;
+            // System.out.println(init + " " + having + " " + round);
             
-            for(int b : base){
-                if(base.contains(target - b)){
-                    base.remove(b);
-                    base.remove(target - b);
+            for(int num : init){
+                if(init.contains(target - num)){
+                    init.remove(num);
+                    init.remove(target - num);
                     compare = true;
-                    result++;
                     break;
                 }
             }
             
             if(!compare){
                 if(coin > 0){
-                    for(int b : base){
-                        if(having.contains(target - b)){
-                            base.remove(b);
-                            having.remove(target - b);
+                    for(int num : init){
+                        if(having.contains(target - num)){
+                            init.remove(num);
+                            having.remove(target - num);
                             compare = true;
                             coin--;
-                            result++;
                             break;
                         }
                     }
@@ -55,24 +51,28 @@ class Solution {
             
             if(!compare){
                 if(coin > 1){
-                    for(int h : having){
-                        if(having.contains(target - h)){
-                            having.remove(h);
-                            having.remove(target - h);
+                    for(int num : having){
+                        if(having.contains(target - num)){
+                            having.remove(target - num);
+                            having.remove(num);
                             compare = true;
                             coin -= 2;
-                            result++;
                             break;
                         }
                     }
                 }
             }
             
+            // System.out.println(init + " " + having + " " + round + " " + compare + " " + coin);
+            
             if(!compare){
                 break;
+            } else{
+                round++;
             }
+            
         }
         
-        return result + 1;
+        return round;
     }
 }
