@@ -20,7 +20,7 @@ class Solution {
              }
          }
          
-         System.out.println(left);
+         // System.out.println(left);
          
          long total = cores.length;
          
