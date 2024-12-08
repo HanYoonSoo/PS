@@ -2,35 +2,32 @@ import java.util.*;
 
 class Solution {
     public long solution(int n, int[] times) {
-
         long left = 1;
         
-        long max = 0;
+        long max = 1000000000 * n;
         for(int time : times){
             max = Math.max(max, time);
         }
         
         long right = max * n;
-        // long result = 0;
-        
         
         while(left <= right){
             long mid = (left + right) / 2;
             
-            long count = 0;
-    
-            for(int time : times){
-                count += (mid / time);
+            long sum = 0;
+            
+            for(int i = 0; i < times.length; i++){
+                sum += mid / times[i];    
             }
             
-            if(count < n){
+            if(sum >= n){
+                right = mid - 1;
+            } else {
                 left = mid + 1;
             }
-            else{
-                right = mid - 1;
-            }
-            
         }
+        
         return left;
+        
     }
 }
