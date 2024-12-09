@@ -3,14 +3,12 @@ import java.util.*;
 class Solution {
     
     public int solution(int[][] board) {
-    
-        int N = board.length;
-        int M = board[0].length;
-        
         int[] dy = {-1, 1, 0, 0};
         int[] dx = {0, 0, -1, 1};
         
-        int[][][] visited = new int[N][M][4];
+        int N = board.length;
+        
+        int[][][] visited = new int[N][N][4];
         
         Queue<int[]> q = new LinkedList<>();
         
@@ -26,24 +24,22 @@ class Solution {
             int dir = curr[2];
             int cost = curr[3];
             
-            // System.out.println(y + " " + x + " " + cost);
-            
-            if(y == N - 1 && x == M - 1){
+            if(y == N - 1 && x == N - 1){
                 result = Math.min(result, cost);
                 continue;
             }
             
-            
             for(int i = 0; i < 4; i++){
+                
                 int ny = y + dy[i];
                 int nx = x + dx[i];
                 
-                if(0 <= ny && ny < N && 0 <= nx && nx < M && board[ny][nx] != 1){
+                if(0 <= ny && ny < N && 0 <= nx && nx < N && board[ny][nx] != 1){
                     int nextCost = cost;
                     
-                    if (dir == -1 || dir == i) {
+                    if(i == dir || dir == -1){
                         nextCost += 100;
-                    } else {
+                    } else{
                         nextCost += 600;
                     }
                     
@@ -56,6 +52,5 @@ class Solution {
         }
         
         return result;
-        
     }
 }
