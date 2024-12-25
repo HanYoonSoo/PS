@@ -39,6 +39,21 @@ public class Main {
 
         StringBuilder sb = new StringBuilder();
 
+        int count = 0;
+        int max = 0;
+        int[] maxCount = new int[N];
+
+        for(int i = N - 1; i >= 0; i--){
+            if(max < nodes[i].s){
+                max = nodes[i].s;
+                count = 1;
+            } else if(max == nodes[i].s){
+                count++;
+            }
+
+            maxCount[i] = count;
+        }
+
         for(int i = 0; i < Q; i++){
             int p = Integer.parseInt(br.readLine());
 
@@ -54,19 +69,11 @@ public class Main {
                     left = mid + 1;
             }
 
-            int count = 0;
-            int min = -1;
-
-            for(int j = left; j < N; j++){
-                if(min < nodes[j].s){
-                    min = nodes[j].s;
-                    count = 1;
-                } else if(min == nodes[j].s){
-                    count++;
-                }
+            if(left >= N){
+                sb.append(0).append("\n");
+            } else{
+                sb.append(maxCount[left]).append("\n");
             }
-
-            sb.append(count).append("\n");
         }
 
         System.out.println(sb);
