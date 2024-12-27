@@ -2,6 +2,7 @@ import java.util.*;
 
 class Solution {
     
+    
     class Node{
         int kind;
         List<Integer> child;
@@ -24,11 +25,11 @@ class Solution {
             tree[i] = new Node(info[i]);
         }
         
-        for(int[] edge : edges){
-            int parent = edge[0];
-            int child = edge[1];
+        for(int i = 0; i < edges.length; i++){
+            int a = edges[i][0];
+            int b = edges[i][1];
             
-            tree[parent].child.add(child);
+            tree[a].child.add(b);
         }
         
         dfs(0, 0, 0, new ArrayList<>());
@@ -36,8 +37,8 @@ class Solution {
         return result;
     }
     
-    public void dfs(int root, int sheep, int wolf, List<Integer> path){
-        if(tree[root].kind == 0){
+    public void dfs(int sheep, int wolf, int node, List<Integer> path){
+        if(tree[node].kind == 0){
             sheep++;
         } else{
             wolf++;
@@ -47,22 +48,17 @@ class Solution {
             return;
         }
         
-        if(sheep > wolf){
-            result = Math.max(sheep, result);
+        result = Math.max(sheep, result);
+        
+        List<Integer> newPath = new ArrayList<>(path);
+        newPath.remove((Integer)node);
+        
+        for(int child : tree[node].child){
+            newPath.add(child);
         }
         
-        List<Integer> nextList = new ArrayList<>();
-        
-        nextList.addAll(path);
-        
-        nextList.remove(Integer.valueOf(root));
-        
-        for(int child : tree[root].child){
-            nextList.add(child);
-        }
-        
-        for(int nextNode : nextList){
-            dfs(nextNode, sheep, wolf, nextList);
+        for(int child : newPath){
+            dfs(sheep, wolf, child, newPath);
         }
     }
 }
