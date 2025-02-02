@@ -5,45 +5,30 @@ import java.util.Arrays;
 
 public class Main {
 
-    static int N;
-    static int[] child;
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-        N = Integer.parseInt(br.readLine());
+        int N = Integer.parseInt(br.readLine());
 
-        child = new int[N + 1];
+        int[] child = new int[N];
+        int[] dp = new int[N];
 
-        for(int i = 1; i <= N; i++){
+        for(int i = 0; i < N; i++){
             child[i] = Integer.parseInt(br.readLine());
         }
 
-        int[] location = new int[N + 1];
+        int max = 0;
 
-        for(int i = 1; i <= N; i++){
-            location[child[i]] = i;
-        }
-
-//        for(int num : location){
-//            System.out.println(num);
-//        }
-
-        int maxNum = -1;
-
-        int dp[] = new int[N + 1];
-
-        Arrays.fill(dp, 1);
-
-        for(int i = 1; i <= N; i++){
-            for(int j = 1; j < i; j++){
-                if(location[i] > location[j]){
-                    dp[i] = Math.max(dp[i], dp[j] + 1);
+        for(int i = 0; i < N; i++){
+            dp[i] = 1;
+            for(int j = 0; j < i; j++){
+                if(child[i] > child[j] && dp[j] + 1 > dp[i]){
+                    dp[i] = dp[j] + 1;
+                    max = Math.max(dp[i], max);
                 }
             }
-
-            maxNum = Math.max(maxNum, dp[i]);
         }
 
-        System.out.println(N - maxNum);
+        System.out.println(N - max);
     }
 }
