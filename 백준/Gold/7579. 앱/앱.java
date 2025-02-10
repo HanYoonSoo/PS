@@ -25,19 +25,15 @@ public class Main {
             c[i] = Integer.parseInt(st2.nextToken());
         }
 
-        int[][] dp = new int[N + 1][10001];
+        int[] dp = new int[10001];
 
         int min = Integer.MAX_VALUE;
 
         for(int i = 1; i <= N; i++){
-            for(int j = 0; j <= 10000; j++){
-                if(j < c[i]){
-                    dp[i][j] = dp[i - 1][j];
-                } else {
-                    dp[i][j] = Math.max(dp[i - 1][j - c[i]] + m[i], dp[i - 1][j]);
-                }
+            for(int j = 10000; j >= c[i]; j--){
+                dp[j] = Math.max(dp[j], dp[j - c[i]] + m[i]);
 
-                if(dp[i][j] >= M){
+                if(dp[j] >= M){
                     min = Math.min(min, j);
                 }
             }
