@@ -1,10 +1,7 @@
 -- 코드를 작성해주세요
-
-select id 
-from ecoli_data
-where parent_id in (select id
-from ecoli_data
-where parent_id in (select id
-from ecoli_data
-where parent_id is null))
-order by id;
+SELECT ID
+FROM ECOLI_DATA
+WHERE PARENT_ID IN (SELECT ID
+           FROM ECOLI_DATA WHERE PARENT_ID IN (SELECT ID
+                                   FROM ECOLI_DATA WHERE PARENT_ID IS NULL))
+ORDER BY ID;
