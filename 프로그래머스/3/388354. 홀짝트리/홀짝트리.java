@@ -1,96 +1,67 @@
 import java.util.*;
 
-class ExploreResult {
-    int oddNode;
-    int evenNode;
-    int reverseOddNode;
-    int reverseEvenNode;
-
-    // Root 홀수노드 -> 역홀수 노드
-    // Root 짝수노드 -> 역짝수 노드
-    // Root 역홀수노드 -> 홀수노드
-    // Root 역짝수노드 -> 짝수노드
-    public int getReverseOddEvenTree() {
-        if((reverseOddNode == 1 && reverseEvenNode == 0) ||
-           (reverseOddNode == 0 && reverseEvenNode == 1)
-        ) {
-            return 1;
-        }
-        return 0;
-    }
-
-    public int getOddEvenTree() {
-        if((oddNode == 1 && evenNode == 0) ||
-           (oddNode == 0 && evenNode == 1)
-        ) {
-            return 1;
-        }
-
-        return 0;
-    }
-    public String toString() {
-        return String.format("result : %d, %d, %d, %d", oddNode, evenNode, reverseOddNode, reverseEvenNode);
-    }
-}
 class Solution {
+    
+    Map<Integer, List<Integer>> map;
+    Set<Integer> visited;
+    int[] result;
     public int[] solution(int[] nodes, int[][] edges) {
-        int[] answer = new int[2];
-
-        var tree = initTree(nodes, edges);
-
-        Set<Integer> visited = new HashSet<>();
-        for(int key : tree.keySet()) {
-            if(visited.contains(key)) {
-                continue;
-            }
-            ExploreResult exploreResult = new ExploreResult();
-            exploreTree(tree, visited, exploreResult, key);
-            answer[0] += exploreResult.getOddEvenTree();
-            answer[1] += exploreResult.getReverseOddEvenTree();
-
+        map = new HashMap<>();
+        
+        for(int node : nodes){
+            map.put(node, new ArrayList<>());
         }
+        
+        for(int[] edge : edges){
+            map.get(edge[0]).add(edge[1]);
+            map.get(edge[1]).add(edge[0]);
+        }
+        
+        int[] answer = new int[2];
+        
+        visited = new HashSet<>();
+        
+        for(int node : map.keySet()){
+            if(visited.contains(node))
+                continue;
+            
+            result = new int[4];
+            
+            findComponent(node, -1);
+            
+            // System.out.println(result[0] + " " + result[1] + " " + result[2] + " " + result[3]);
+            
+            if((result[2] == 1 && result[3] == 0) || 
+                result[2] == 0 && result[3] == 1){
+                answer[1]++;        
+            } if((result[0] == 1 && result[1] == 0) || 
+                result[0] == 0 && result[1] == 1){
+                answer[0]++;
+            }
+        }
+        
         return answer;
     }
-
-    public void exploreTree(Map<Integer, List<Integer>> tree,
-                           Set<Integer> visited,
-                           ExploreResult exploreResult,
-                           int current
-    ) {
-        var nexts = tree.get(current);
-        if(nexts.size() % 2 == 0 && current % 2 == 0) {
-            exploreResult.evenNode++;
+    
+    public void findComponent(int root, int parent){
+        visited.add(root);
+        
+        int childCount = map.get(root).size();
+        
+        if(root % 2 == 1 && childCount % 2 == 1){
+            result[0]++;
+        } if(root % 2 == 0 && childCount % 2 == 0){
+            result[1]++;
+        } if(root % 2 == 1 && childCount % 2 == 0){
+            result[2]++;
+        } if(root % 2 == 0 && childCount % 2 == 1){
+            result[3]++;
         }
-        if(nexts.size() % 2 == 1 && current % 2 == 0) {
-            exploreResult.reverseEvenNode++;
-        }
-        if(nexts.size() % 2 == 0 && current % 2 == 1) {
-            exploreResult.reverseOddNode++;
-        }
-        if(nexts.size() % 2 == 1 && current % 2 == 1) {
-            exploreResult.oddNode++;
-        }
-        visited.add(current);
-        for(int next : nexts) {
-            if(visited.contains(next)) {
-                continue;
+        
+        for(int child : map.get(root)){
+            if(!visited.contains(child)){
+                findComponent(child, root);
             }
-            exploreTree(tree, visited, exploreResult, next);
         }
-    }
-
-    public Map<Integer, List<Integer>> initTree(int[] nodes, int[][] edges) {
-        Map<Integer, List<Integer>> tree = new HashMap<>();
-
-        for(int node : nodes) {
-            tree.put(node, new ArrayList<>());
-        }
-
-        for(int[] edge : edges) {
-            tree.get(edge[0]).add(edge[1]);
-            tree.get(edge[1]).add(edge[0]);
-        }
-
-        return tree;
     }
 }
