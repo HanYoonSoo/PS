@@ -8,40 +8,42 @@ import java.util.*;
 class Solution {
     public int solution(int bridge_length, int weight, int[] truck_weights) {
         Queue<Integer> q = new LinkedList<>();
+        q.add(0);
+        
         int sum = 0;
         int time = 0;
+        int idx = 0;
         
-        for(int i = 0; i < truck_weights.length; i++){
-            int truck = truck_weights[i];
-            while(true){
-                if(q.isEmpty()){
-                    sum += truck;
-                    q.add(truck);
-                    time++;
-                    break;
-                }
-                else if(q.size() == bridge_length){
-                    sum -= q.poll();
-                }
-                else{
-                    if((sum + truck) <= weight){
-                        q.add(truck);
-                        sum += truck;
-                        time++;
-                        break;
-                    }else{
-                        q.add(0);
-                        time++;
-                    }
+        while(true){
+            if(q.size() == bridge_length){
+                int curr = q.poll();      
+                time++;
                 
+                if(curr != 0){
+                    sum -= curr;
                 }
-                
-                
+            }
+            
+            if(idx < truck_weights.length){
+                if(sum + truck_weights[idx] <= weight){
+                    sum += truck_weights[idx];
+                    q.add(truck_weights[idx++]);
+                } else {
+                    q.add(0);
+                }
+            } else if(sum == 0 || q.isEmpty()) {
+                break;
+            } else {
+                q.add(0);
             }
         }
         
+        while(!q.isEmpty()){
+            int num = q.poll();
+            time++;
+        }
         
-        return time + bridge_length;
+        return time;
     }
 }
 
