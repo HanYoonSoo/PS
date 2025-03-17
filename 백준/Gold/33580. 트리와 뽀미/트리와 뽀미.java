@@ -41,10 +41,6 @@ public class Main {
             Arrays.fill(dpNew, Long.MIN_VALUE);
 
             for (int i = 0; i < n; i++) {
-                if (dp[i] == Long.MIN_VALUE) {
-                    continue;
-                }
-
                 dpNew[i] = Math.max(dpNew[i], dp[i] + (cats[time] == i ? 1 : 0));
 
                 for (int j : graph.get(i)) {
