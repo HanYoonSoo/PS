@@ -4,58 +4,57 @@ import java.util.*;
 public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter out = new BufferedWriter(new OutputStreamWriter(System.out));
 
         StringTokenizer st = new StringTokenizer(br.readLine());
-        int n = Integer.parseInt(st.nextToken());
-        int t = Integer.parseInt(st.nextToken());
+        int N = Integer.parseInt(st.nextToken());
+        int T = Integer.parseInt(st.nextToken());
 
-        List<List<Integer>> graph = new ArrayList<>();
-        for (int i = 0; i < n; i++) {
-            graph.add(new ArrayList<>());
+        List<Integer>[] tree = new ArrayList[N];
+        int[] cats = new int[T];
+        int[] dp = new int[N];
+
+        for(int i = 0; i < N; i++){
+            tree[i] = new ArrayList<>();
         }
 
-        for (int i = 0; i < n - 1; i++) {
+        for(int i = 0; i < N - 1; i++){
             st = new StringTokenizer(br.readLine());
-            int u = Integer.parseInt(st.nextToken()) - 1;
-            int v = Integer.parseInt(st.nextToken()) - 1;
-            graph.get(u).add(v);
-            graph.get(v).add(u);
+            int a = Integer.parseInt(st.nextToken()) - 1;
+            int b = Integer.parseInt(st.nextToken()) - 1;
+
+            tree[a].add(b);
+            tree[b].add(a);
         }
 
-        int[] cats = new int[t];
         st = new StringTokenizer(br.readLine());
-        for (int i = 0; i < t; i++) {
+
+        for(int i = 0; i < T; i++){
             cats[i] = Integer.parseInt(st.nextToken()) - 1;
         }
 
-        long[] dp = new long[n];
-        Arrays.fill(dp, Long.MIN_VALUE);
+        dp[cats[0]] = 1;
 
-        for (int i = 0; i < n; i++) {
-            dp[i] = (cats[0] == i) ? 1 : 0;
-        }
+        for(int i = 1; i < T; i++){
+            int[] newDp = new int[N];
+            Arrays.fill(newDp, Integer.MIN_VALUE);
 
-        for (int time = 1; time < t; time++) {
-            long[] dpNew = new long[n];
-            Arrays.fill(dpNew, Long.MIN_VALUE);
+            for(int j = 0; j < N; j++){
+                newDp[j] = Math.max(newDp[j], dp[j] + (cats[i] == j ? 1 : 0));
 
-            for (int i = 0; i < n; i++) {
-                dpNew[i] = Math.max(dpNew[i], dp[i] + (cats[time] == i ? 1 : 0));
-
-                for (int j : graph.get(i)) {
-                    dpNew[j] = Math.max(dpNew[j], dp[i] + (cats[time] == j ? 1 : 0));
+                for(int next : tree[j]){
+                    newDp[next] = Math.max(newDp[next], dp[j] + (cats[i] == next ? 1 : 0));
                 }
             }
 
-            dp = dpNew;
+            dp = newDp;
         }
 
-        long max = Arrays.stream(dp).max().getAsLong();
-        out.write(max + "\n");
+        int max = 0;
+        for(int i = 0; i < N; i++){
+            max = Math.max(max, dp[i]);
+//            System.out.println(dp[i]);
+        }
 
-        out.flush();
-        br.close();
-        out.close();
+        System.out.println(max);
     }
 }
