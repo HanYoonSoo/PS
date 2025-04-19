@@ -1,29 +1,40 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.*;
 
 public class Main {
-    static int N;
-    static List<Integer> v = new ArrayList<>();
-    static int M;
-    static String[][] dp = new String[51][51];
 
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        N = sc.nextInt();
+    static String compare(String a, String b) {
+        if (a.length() == b.length()) {
+            return a.compareTo(b) > 0 ? a : b;
+        }
+        return a.length() < b.length() ? b : a;
+    }
+    
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int N = Integer.parseInt(br.readLine());
 
+        int[] P = new int[N];
+        String[][] dp = new String[51][51];
+
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        
         for (int i = 0; i < N; i++) {
-            v.add(sc.nextInt());
+            P[i] = Integer.parseInt(st.nextToken());
         }
 
-        M = sc.nextInt();
+        int M = Integer.parseInt(br.readLine());
 
         // dp 초기화
         for (int i = 0; i <= 50; i++) {
             Arrays.fill(dp[i], "");
         }
 
-        for (int i = 0; i < v.size(); i++) {
-            if (v.get(i) > M) continue;
-            dp[v.get(i)][1] = compare(dp[v.get(i)][1], Integer.toString(i));
+        for (int i = 0; i < N; i++) {
+            if (P[i] > M) continue;
+            dp[P[i]][1] = compare(dp[P[i]][1], Integer.toString(i));
         }
 
         for (int i = 2; i <= 50; i++) {
@@ -48,13 +59,5 @@ public class Main {
         }
 
         System.out.println(answer);
-    }
-
-    // 길이 비교 후 문자열 비교
-    static String compare(String a, String b) {
-        if (a.length() == b.length()) {
-            return a.compareTo(b) > 0 ? a : b;
-        }
-        return a.length() < b.length() ? b : a;
     }
 }
