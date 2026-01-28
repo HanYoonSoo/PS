@@ -1,49 +1,78 @@
-import java.util.*;
+import org.w3c.dom.ls.LSOutput;
+
+import java.util.Deque;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.io.*;
 
 public class Main {
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        int T = sc.nextInt();
+    public static void main(String[] args) throws IOException{
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-        for (int tc = 1; tc <= T; tc++) {
-            String p = sc.next();
-            int n = sc.nextInt();
+        int t = Integer.parseInt(br.readLine());
 
-            String arrStr = sc.next();
-            Deque<Integer> deque = new LinkedList<>();
-            for (String s : arrStr.substring(1, arrStr.length() - 1).split(","))
-                if (!s.equals(""))
-                    deque.add(Integer.valueOf(s));
+        StringBuilder sb = new StringBuilder();
 
-            System.out.println(ac(deque, p));
-        }
-    }
+        while (t-- > 0) {
+            Deque<Integer> dq = new LinkedList<>();
+            String[] commands = br.readLine().split("");
+            boolean isLeft = true;
+            int num = Integer.parseInt(br.readLine());
+            String[] nums = br.readLine().split("\\D+");
 
-    static String ac(Deque<Integer> deque, String commands) {
-        boolean reverse = false;
+            for (int i = 1; i < nums.length; i++) {
+                dq.add(Integer.parseInt(nums[i]));
+            }
 
-        for (char command : commands.toCharArray()) {
-            if (command == 'R')
-                reverse = !reverse;
-            else {
-                if (deque.size() == 0)
-                    return "error";
+//            System.out.println(dq);
 
-                if (reverse)
-                    deque.removeLast();
-                else
-                    deque.removeFirst();
+            boolean isError = false;
+
+            int rCount = 0;
+
+            for (int i = 0; i < commands.length; i++) {
+                if (commands[i].equals("R")) {
+                    isLeft = !isLeft;
+                    rCount++;
+                } else if (commands[i].equals("D")) {
+//                    System.out.println(dq);
+                    if (dq.isEmpty()) {
+                        isError = true;
+                        break;
+                    } else {
+                        if (isLeft) {
+                            dq.pollFirst();
+                        } else {
+                            dq.pollLast();
+                        }
+                    }
+                }
+            }
+
+            if (isError) {
+                sb.append("error").append("\n");
+            } else {
+                sb.append("[");
+                int size = dq.size();
+                if (rCount % 2 == 0) {
+                    for (int i = 0; i < size; i++) {
+                        if (i != size - 1)
+                            sb.append(dq.pollFirst()).append(",");
+                        else
+                            sb.append(dq.pollFirst());
+                    }
+                } else {
+                    for (int i = 0; i < size; i++) {
+                        if (i != size - 1)
+                            sb.append(dq.pollLast()).append(",");
+                        else
+                            sb.append(dq.pollLast());
+                    }
+                }
+                sb.append("]").append("\n");
             }
         }
 
-        StringBuilder sb = new StringBuilder("[");
-        while (!deque.isEmpty()) {
-            sb.append(reverse ? deque.removeLast() : deque.removeFirst());
-            if (deque.size() != 0)
-                sb.append(',');
-        }
-        sb.append(']');
-
-        return sb.toString();
+        System.out.println(sb.toString());
     }
 }
