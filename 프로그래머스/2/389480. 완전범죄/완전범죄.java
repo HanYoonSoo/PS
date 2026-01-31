@@ -3,34 +3,33 @@ import java.util.*;
 class Solution {
     public int solution(int[][] info, int n, int m) {
         int N = info.length;
-        int INF = 121;
-        
         int[][] dp = new int[N + 1][m];
         
-        for(int i = 0; i <= N; i++)
-            Arrays.fill(dp[i], INF);
+        for(int i = 0; i <= N; i++) {
+            Arrays.fill(dp[i], 121);
+        }
         
         dp[0][0] = 0;
         
-        for(int i = 1; i <= N; i++){
+        for (int i = 1; i <= N; i++) {
             int a = info[i - 1][0];
             int b = info[i - 1][1];
             
-            for(int j = 0; j < m; j++){
+            for (int j = 0; j < m; j++) {
                 dp[i][j] = Math.min(dp[i][j], dp[i - 1][j] + a);
                 
-                if(j - b >= 0){
+                if (j >= b) {
                     dp[i][j] = Math.min(dp[i][j], dp[i - 1][j - b]);
                 }
             }
         }
         
-        int min = INF;
+        int min = 121;
         
-        for(int i = 0; i < m; i++){
-            min = Math.min(min, dp[N][i]);
+        for (int i = 0; i < m; i++) {
+            min = Math.min(dp[N][i], min);
         }
-    
+        
         return min >= n ? -1 : min;
     }
 }
