@@ -1,68 +1,67 @@
 import java.util.*;
 
-class Solution {
-    
-    List<Integer> nList;
-    List<Set<Integer>> combs;
+class Solution {    
+    List<Set<Integer>> combinations = new ArrayList<>();
+    List<Integer> numList;
+    int N;
     
     public int solution(int n, int[][] q, int[] ans) {
-        Set<Integer> set = new HashSet<>();
+        N = ans.length;
+        Set<Integer> possibleNum = new HashSet<>();
         
-        int N = ans.length;
-        
-        for(int i = 1; i <= n; i++){
-            set.add(i);
+        for (int i = 1; i <= n; i++) {
+            possibleNum.add(i);
         }
         
-        for(int i = 0; i < N; i++){
-            if(ans[i] == 0){
-               for(int j = 0; j < 5; j++){
-                   set.remove(q[i][j]);
-               } 
+        for (int i = 0; i < N; i++) {
+            if (ans[i] == 0) {
+                for (int j = 0; j < 5; j++) {
+                    possibleNum.remove(q[i][j]);
+                }
             }
         }
         
-        nList = new ArrayList<>(set);
-        combs = new ArrayList<>();
+        numList = new ArrayList<>(possibleNum);
         
         findCombinations(0, new HashSet<>());
         
-        int answer = 0;
+        // System.out.println(combinations);
         
-        for(Set<Integer> comb : combs){
-            boolean compare = true;
-            
-            for(int i = 0; i < N; i++){
+        int result = 0;
+        
+        for (Set<Integer> comb : combinations) {
+            boolean possible = true;
+            for (int i = 0; i < N; i++) {
                 int count = 0;
-                for(int j = 0; j < 5; j++){
-                    if(comb.contains(q[i][j]))
+                for (int j = 0; j < 5; j++) {
+                    if (comb.contains(q[i][j]))
                         count++;
                 }
-
-                if(count != ans[i]){
-                    compare = false;
+                if (count != ans[i]) {
+                    possible = false;
                     break;
                 }
             }
-            
-            if(compare){
-                answer++;
+            if (!possible)
+                continue;
+            else {
+                result++;
             }
         }
         
-        return answer;
+        return result;   
     }
     
-    public void findCombinations(int idx, Set<Integer> set){
-        if(set.size() == 5){
-            combs.add(set);
+    public void findCombinations(int idx, Set<Integer> set) {
+        if (set.size() == 5) {
+            combinations.add(set);
             return;
         }
         
-        for(int i = idx; i < nList.size(); i++){
-            Set<Integer> nextSet = new HashSet<>(set);
-            nextSet.add(nList.get(i));
-            findCombinations(i + 1, nextSet);
+        for (int i = idx; i < numList.size(); i++) {
+            Set<Integer> newSet = new HashSet<>(set);
+            newSet.add(numList.get(i));
+            findCombinations(i + 1, newSet);
         }
     }
 }
