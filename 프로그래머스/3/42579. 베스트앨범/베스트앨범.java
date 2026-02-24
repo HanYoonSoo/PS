@@ -2,49 +2,48 @@ import java.util.*;
 
 class Solution {
     public int[] solution(String[] genres, int[] plays) {
-        Map<String, Integer> sumMap = new HashMap<>();
-        Map<String, HashMap<Integer, Integer>> genreMap = new HashMap<>();
+        Map<String, Integer> genresSumMap = new HashMap<>();
+        Map<String, Map<Integer, Integer>> genresIdxPlayMap = new HashMap<>();
         
-        for(int i = 0; i < genres.length; i++){
-            String genre = genres[i];
-            sumMap.put(genre, sumMap.getOrDefault(genre, 0) + plays[i]);
-            
-            if(genreMap.containsKey(genre)){
-                genreMap.get(genre).put(i, plays[i]);
-            } else{
-                HashMap<Integer, Integer> genreIdxMap = new HashMap<>();
-                genreIdxMap.put(i, plays[i]);
-                genreMap.put(genre, genreIdxMap);
+        int N = genres.length;
+        
+        for (int i = 0; i < N; i++) {
+            genresSumMap.put(genres[i], genresSumMap.getOrDefault(genres[i], 0) + plays[i]);
+            if (!genresIdxPlayMap.containsKey(genres[i])) {
+                genresIdxPlayMap.put(genres[i], new HashMap<>());
+                genresIdxPlayMap.get(genres[i]).put(i, plays[i]);
+            } else {
+                genresIdxPlayMap.get(genres[i]).put(i, plays[i]);
             }
         }
         
-        List<String> sumList = new ArrayList<>(sumMap.keySet());
+        List<String> sumList = new ArrayList<>(genresSumMap.keySet());
         
         Collections.sort(sumList, (o1, o2) -> {
-           return sumMap.get(o2) - sumMap.get(o1); 
+            return genresSumMap.get(o2) - genresSumMap.get(o1);
         });
         
-        List<Integer> answer = new ArrayList<>();
+        List<Integer> result = new ArrayList<>();
         
-        for(String genre : sumList){
-            HashMap<Integer, Integer> map = genreMap.get(genre);
+        for (String key : sumList) {
+            Map<Integer, Integer> map = genresIdxPlayMap.get(key);
             
-            List<Integer> genreIdx = new ArrayList<>(map.keySet());
+            List<Integer> idxPlayList = new ArrayList<>(map.keySet());
             
-            Collections.sort(genreIdx, (o1, o2) -> {
-                if(map.get(o1) == map.get(o2)){
-                    return o1 - o2;
-                }
-                return map.get(o2) - map.get(o1);
+            Collections.sort(idxPlayList, (o1, o2) -> {
+               if (map.get(o1) == map.get(o2)) {
+                   return o1 - o2;
+               } else {
+                   return map.get(o2) - map.get(o1);
+               }
             });
             
-            answer.add(genreIdx.get(0));
+            result.add(idxPlayList.get(0));
             
-            if(genreIdx.size() > 1)
-                answer.add(genreIdx.get(1));
+            if (idxPlayList.size() > 1) 
+                result.add(idxPlayList.get(1));
         }
         
-        return answer.stream().mapToInt(i -> i).toArray();
-        
+        return result.stream().mapToInt(i -> i).toArray();
     }
 }
